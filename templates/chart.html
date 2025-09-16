@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .log-container { margin: 20px; }
+        canvas { max-width: 600px; }
+    </style>
+</head>
+<body>
+    <h1>Prediction Logs</h1>
+    {% for log in logs %}
+        <div class="log-container">
+            <h3>{{ log }}</h3>
+            <canvas id="chart_{{ loop.index }}" data-log-file="{{ log }}"></canvas>
+            <form id="form_{{ loop.index }}" action="/upload_reality/{{ log }}" method="post" enctype="multipart/form-data">
+                <input type="file" name="reality_csv" accept=".csv">
+                <button type="submit">Upload Reality Output</button>
+            </form>
+        </div>
+        <hr>
+    {% endfor %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form[id^="form_"]');
+
+            forms.forEach((form) => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const canvasId = `chart_${form.id.split('_')[1]}`;
+                    const canvas = document.getElementById(canvasId);
+                    const logFile = canvas.getAttribute('data-log-file');
+                    const ctx = canvas.getContext('2d');
+
+                    // Clear canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Show loading message
+                    ctx.font = "16px Arial";
+                    ctx.fillStyle = "black";
+                    ctx.fillText("Uploading and processing data...", 10, 50);
+
+                    // Simulate form submission via fetch
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (!result.success) {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.fillStyle = "red";
+                            ctx.fillText(result.error || "Error uploading file", 10, 50);
+                            return;
+                        }
+
+                        // Fetch chart data after successful upload
+                        fetch(`/chart_data/${logFile}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                                if (data.error) {
+                                    ctx.fillStyle = "red";
+                                    ctx.fillText(data.error, 10, 50);
+                                    return;
+                                }
+
+                                // Check if y_true data is available
+                                if (data[0].y_true === undefined) {
+                                    ctx.font = "16px Arial";
+                                    ctx.fillStyle = "black";
+                                    ctx.fillText("No reality data available", 10, 50);
+                                    return;
+                                }
+
+                                const points = data.map((row, idx) => ({
+                                    x: row.Predicted_c_cs,
+                                    y: row.y_true,
+                                    info: row
+                                }));
+
+                                const maxVal = Math.max(
+                                    ...points.map(p => Math.max(p.x, p.y))
+                                );
+
+                                new Chart(ctx, {
+                                    type: 'scatter',
+                                    data: {
+                                        datasets: [
+                                            {
+                                                label: 'Predicted vs Actual',
+                                                data: points,
+                                                backgroundColor: 'blue',
+                                                pointRadius: 6
+                                            },
+                                            {
+                                                label: 'y = x',
+                                                data: [
+                                                    { x: 0, y: 0 },
+                                                    { x: maxVal, y: maxVal }
+                                                ],
+                                                type: 'line',
+                                                borderColor: 'gray',
+                                                borderWidth: 1,
+                                                fill: false,
+                                                pointRadius: 0,
+                                                borderDash: [5, 5]
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: { position: 'top' },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        const info = context.raw.info;
+                                                        return `Predicted: ${context.raw.x}, Actual: ${context.raw.y} | Cement: ${info.cement_dosage}, Water: ${info.water}`;
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                title: { 
+                                                    display: true, 
+                                                    text: 'Predicted Compressive Strength (MPa)' 
+                                                }
+                                            },
+                                            y: {
+                                                title: { 
+                                                    display: true, 
+                                                    text: 'Actual Compressive Strength (MPa)' 
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            })
+                            .catch(err => {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.font = "16px Arial";
+                                ctx.fillStyle = "red";
+                                ctx.fillText("Error loading chart data", 10, 50);
+                                console.error('Error loading chart data:', err);
+                            });
+                    })
+                    .catch(err => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.font = "16px Arial";
+                        ctx.fillStyle = "red";
+                        ctx.fillText("Error uploading file", 10, 50);
+                        console.error('Error uploading file:', err);
+                    });
+                });
+            });
+
+            // Initial check for existing y_true data
+            const canvases = document.querySelectorAll('canvas[id^="chart_"]');
+            canvases.forEach((canvas) => {
+                const logFile = canvas.getAttribute('data-log-file');
+                const ctx = canvas.getContext('2d');
+
+                fetch(`/chart_data/${logFile}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error || data[0].y_true === undefined) {
+                            ctx.font = "16px Arial";
+                            ctx.fillStyle = "black";
+                            ctx.fillText("Please upload reality CSV to display chart", 10, 50);
+                        } else {
+                            // If y_true exists, render chart immediately
+                            const points = data.map((row, idx) => ({
+                                x: row.Predicted_c_cs,
+                                y: row.y_true,
+                                info: row
+                            }));
+
+                            const maxVal = Math.max(
+                                ...points.map(p => Math.max(p.x, p.y))
+                            );
+
+                            new Chart(ctx, {
+                                type: 'scatter',
+                                data: {
+                                    datasets: [
+                                        {
+                                            label: 'Predicted vs Actual',
+                                            data: points,
+                                            backgroundColor: 'blue',
+                                            pointRadius: 6
+                                        },
+                                        {
+                                            label: 'y = x',
+                                            data: [
+                                                { x: 0, y: 0 },
+                                                { x: maxVal, y: maxVal }
+                                            ],
+                                            type: 'line',
+                                            borderColor: 'gray',
+                                            borderWidth: 1,
+                                            fill: false,
+                                            pointRadius: 0,
+                                            borderDash: [5, 5]
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: { position: 'top' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const info = context.raw.info;
+                                                    return `Predicted: ${context.raw.x}, Actual: ${context.raw.y} | Cement: ${info.cement_dosage}, Water: ${info.water}`;
+                                                }
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            title: { 
+                                                display: true, 
+                                                text: 'Predicted Compressive Strength (MPa)' 
+                                            }
+                                        },
+                                        y: {
+                                            title: { 
+                                                display: true, 
+                                                text: 'Actual Compressive Strength (MPa)' 
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        ctx.font = "16px Arial";
+                        ctx.fillStyle = "red";
+                        ctx.fillText("Error loading chart data", 10, 50);
+                        console.error('Error loading chart data:', err);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

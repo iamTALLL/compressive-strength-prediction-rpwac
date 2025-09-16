@@ -1,0 +1,10 @@
+<div class="navbar">
+    <a href="https://vju.vnu.edu.vn">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="logo">
+    </a>
+    <div class="nav-links">
+        <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}class="active"{% endif %}>Home</a>
+        <a href="{{ url_for('predict') }}" {% if request.endpoint == 'predict' %}class="active"{% endif %}>Predict</a>
+        <a href="{{ url_for('chart') }}" {% if request.endpoint == 'chart' %}class="active"{% endif %}>Chart</a>
+    </div>
+</div>

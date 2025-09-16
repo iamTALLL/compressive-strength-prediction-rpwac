@@ -1,0 +1,410 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    margin: 0;
+    padding: 2cm 0 0 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+body.home-page {
+    background-image: url('/static/home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+body.home-page .content {
+    background-color: rgba(255, 255, 255, 0.8); /* Nền trắng bán trong suốt */
+    padding: 20px;
+    border-radius: 8px; /* Bo góc cho đẹp */
+}
+body.home-page .main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 2cm);
+    text-align: center;
+}
+.slogan-line1, .slogan-line2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #e42024;
+    text-align: center;
+    margin: 10px 0;
+}
+.subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 800px;
+}
+.container {
+
+}
+.navbar {
+    background-color: white;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 2cm;
+    border-bottom: 1px solid #c4c4c4; /* Thêm đường viền mảnh */
+}
+.logo {
+    max-height: 60px;
+    width: auto;
+    margin-right: 20px;
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+.navbar a {
+    color: #000000;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+.navbar a:hover {
+    color: #e42024;
+}
+.navbar a.active {
+    font-weight: bold;
+}
+.main-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: calc(100vh - 2cm);
+    box-sizing: border-box;
+    padding-top: 1cm;
+}
+.left-section {
+    flex: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.right-section {
+    flex: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: -3cm;
+}
+.model-overview {
+    max-width: 600px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+.model-overview h2 {
+    font-size: 55px;
+    font-weight: 300;
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+}
+.model-overview p {
+    font-size: 16px;
+    font-weight: 100;
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+}
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-width: 600px;
+    width: 100%;
+    padding-top: 1cm;
+    column-gap: 30px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-width: 230px;
+    cursor: help;
+}
+input[type="number"] {
+    width: 310px;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #333333;
+    color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+    border: 2px solid #f0f0f0;
+    outline: none;
+}
+input.invalid {
+    border: 1px solid red;
+}
+button {
+    grid-column: span 2;
+    background-color: transparent;
+    color: #e42024;
+    padding: 12px 15px;
+    border: 2px solid #e42024;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+button:hover {
+    background-color: #e42024;
+    color: white;
+}
+button:active {
+    background-color: #c82333;
+    color: white;
+}
+.result {
+    grid-column: span 2;
+    text-align: center;
+    margin-top: 0px;
+    font-size: 20px;
+    color: #ffffff;
+}
+.result span {
+    font-weight: bold;
+    color: rgb(58, 207, 32);
+}
+.error {
+    grid-column: span 2;
+    text-align: center;
+    margin-top: 10px;
+    color: red;
+    font-size: 18px;
+}
+.field-error, .button-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 3px;
+    min-height: 18px;
+    text-align: center;
+}
+.content {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+/* CSV upload section */
+.csv-upload-section {
+    background-color: rgba(50, 50, 50, 0.8);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    text-align: center;
+    grid-column: span 2;
+}
+
+/* Title trong CSV section */
+.csv-upload-section h3 {
+    color: #e42024;
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Input file */
+.csv-upload-section input[type="file"] {
+    display: block;
+    margin: 0 auto 15px auto;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Button upload CSV */
+.csv-upload-section button {
+    background-color: transparent;
+    color: #e42024;
+    padding: 12px 15px;
+    border: 2px solid #e42024;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    text-align: center;
+    width: 200px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.csv-upload-section button:hover {
+    background-color: #e42024;
+    color: white;
+}
+
+.csv-upload-section button:active {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Bảng kết quả */
+.csv-results {
+    margin-top: 15px;
+    overflow-x: auto;
+}
+
+.csv-results table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+.csv-results th, .csv-results td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.csv-results th {
+    background-color: #222;
+    color: #e42024;
+    font-weight: 600;
+}
+
+.csv-results td {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+    .right-section, .left-section {
+        margin-left: 0;
+    }
+}
+
+/* Log container */
+.log-container {
+    background-color: rgba(0, 0, 0, 0.7); /* nền tối bán trong suốt */
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 700px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Tiêu đề log */
+.log-container h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Canvas chart */
+.log-container canvas {
+    display: block;
+    margin: 0 auto 15px auto;
+    background-color: #111111; /* nền canvas tối */
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+/* Form upload reality */
+.log-container form {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.log-container input[type="file"] {
+    margin-bottom: 10px;
+}
+
+.log-container button {
+    background-color: transparent;
+    color: #e42024;
+    padding: 8px 15px;
+    border: 2px solid #e42024;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.log-container button:hover {
+    background-color: #e42024;
+    color: white;
+}
+
+.log-container button:active {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Responsive: thu nhỏ màn hình */
+@media screen and (max-width: 768px) {
+    .log-container {
+        padding: 15px;
+        max-width: 95%;
+    }
+
+    .log-container canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    form input[type="file"], form button {
+        width: 90%;
+    }
+}
+

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Concrete Compressive Strength (c_cs)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            margin: 0;
+            padding: 2cm 0 0 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            /* Không còn cần khung màu xám */
+        }
+        .header {
+            background-color: white;
+            height: 2cm;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .logo {
+            max-height: 60px;
+            width: auto;
+        }
+        .header h1 {
+            color: #000000;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+        }
+        .title-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            min-height: calc(100vh - 2cm);
+            box-sizing: border-box;
+        }
+        .left-section {
+            flex: 0.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .right-section {
+            flex: 0.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: -3cm;
+        }
+        .model-overview {
+            max-width: 600px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        .model-overview h2 {
+            font-size: 55px;
+            font-weight: 300;
+            margin: 0 0 15px 0;
+            line-height: 1.4;
+        }
+        .model-overview p {
+            font-size: 16px;
+            font-weight: 100;
+            text-align: center;
+            margin: 0;
+            line-height: 1.6;
+        }
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            width: 100%;
+            padding-top: 1cm;
+            column-gap: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-size: 14px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 230px;
+            cursor: help;
+        }
+        input[type="number"] {
+            width: 310px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #333333;
+            color: #ffffff;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            border: 2px solid #f0f0f0;
+            outline: none;
+        }
+        input.invalid {
+            border: 1px solid red;
+        }
+        button {
+            grid-column: span 2;
+            background-color: transparent;
+            color: #e42024;
+            padding: 12px 15px;
+            border: 2px solid #e42024;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            text-align: center;
+            width: 150px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #e42024;
+            color: white;
+        }
+        button:active {
+            background-color: #c82333;
+            color: white;
+        }
+        .result {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 0px;
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .result span {
+            font-weight: bold;
+            color: rgb(58, 207, 32);
+        }
+        .error {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 10px;
+            color: red;
+            font-size: 18px;
+        }
+        .field-error, .button-error {
+            color: red;
+            font-size: 14px;
+            margin-top: 3px;
+            min-height: 18px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            const button = document.querySelector('button[type="submit"]');
+            const form = document.querySelector('form');
+            const buttonError = document.createElement('div');
+            buttonError.className = 'button-error';
+            button.parentNode.insertBefore(buttonError, button.nextSibling);
+
+            // Function to check all inputs
+            function checkInputs(setInvalidBorder = false) {
+                let hasError = false;
+                inputs.forEach(input => {
+                    const value = input.value.trim();
+                    let errorMessage = '';
+
+                    // Check if value is a valid number format
+                    if (value === '') {
+                        errorMessage = 'Please enter a number.';
+                    } else if (!/^-?\d*\.?\d*$/.test(value)) {
+                        errorMessage = 'Please enter only numbers (decimal point allowed).';
+                    } else if (parseFloat(value) < 0) {
+                        errorMessage = 'Please enter a non-negative value.';
+                    }
+
+                    // Only set error message and border if setInvalidBorder is true (after Predict click)
+                    const errorDiv = input.parentNode.querySelector('.field-error');
+                    if (setInvalidBorder) {
+                        errorDiv.textContent = errorMessage;
+                        if (errorMessage) {
+                            input.classList.add('invalid');
+                        } else {
+                            input.classList.remove('invalid');
+                        }
+                    }
+
+                    if (errorMessage) hasError = true;
+                });
+
+                return !hasError;
+            }
+
+            // Create error div for each input and initialize
+            inputs.forEach(input => {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'field-error';
+                input.parentNode.appendChild(errorDiv);
+                errorDiv.textContent = '';
+                input.classList.remove('invalid');
+
+                input.addEventListener('input', () => {
+                    // Show error message on invalid input (non-empty only), clear border
+                    const value = input.value.trim();
+                    let errorMessage = '';
+
+                    if (value !== '' && !/^-?\d*\.?\d*$/.test(value)) {
+                        errorMessage = 'Please enter only numbers (decimal point allowed).';
+                    } else if (value !== '' && parseFloat(value) < 0) {
+                        errorMessage = 'Please enter a non-negative value.';
+                    } else if (value === '') {
+                        errorMessage = 'Please enter a number.';
+                    }
+
+                    input.parentNode.querySelector('.field-error').textContent = errorMessage;
+                    input.classList.remove('invalid'); // Clear border on input change
+                    checkInputs(); // Update for form validation
+                    buttonError.textContent = ''; // Clear button error on input change
+                });
+            });
+
+            // Check inputs on mouseover for form validation (no visual changes)
+            button.addEventListener('mouseover', () => checkInputs(false));
+
+            // Handle button click
+            button.addEventListener('click', (event) => {
+                if (!checkInputs(true)) { // Set invalid border and show errors on click
+                    event.preventDefault(); // Prevent form submission
+                    buttonError.textContent = 'Please enter all required information.';
+                } else {
+                    buttonError.textContent = ''; // Clear error if valid
+                    inputs.forEach(input => {
+                        input.classList.remove('invalid'); // Clear borders
+                        input.parentNode.querySelector('.field-error').textContent = ''; // Clear field errors
+                    });
+                }
+            });
+
+            // Initial check to ensure no errors or borders
+            checkInputs(false);
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@100;300;400;700&family=Open+Sans:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <img src="/static/logo.jpg" alt="Logo" class="logo">
+        <div class="title-container">
+            <h1>PREDICT CONCRETE COMPRESSIVE STRENGTH</h1>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="left-section">
+            <div class="model-overview">
+                <h2>Model Overview</h2>
+                <p>Machine Learning can accurately predict the compressive strength of concrete incorporating recycled plastic aggregates under laboratory conditions. The XGBoost model combined with the ZOA optimization algorithm achieves over 90% accuracy, demonstrating strong capability in predicting the mechanical properties of concrete with complex and nonlinear input variables.</p>
+            </div>
+        </div>
+        <div class="right-section">
+            <form method="POST" novalidate>  
+                <div>
+                    <label for="cement_dosage" title="Amount of cement, in kilograms, used in a unit volume of the concrete mix (usually 1 m³). This is a key factor affecting the strength and properties of concrete.">Cement dosage (c_d) (kg):</label>
+                    <input type="number" id="cement_dosage" name="cement_dosage" step="any" title="Please enter a non-negative number (e.g., 0 or 540.5)." required>
+                </div>
+                <div>
+                    <label for="cement_compressive_strength" title="Compressive strength of cement, measured in megapascals (MPa). This indicates the cement's ability to withstand compressive forces after setting, typically determined at 28 days.">Cement compressive strength (ce_cs) (MPa):</label>
+                    <input type="number" id="cement_compressive_strength" name="cement_compressive_strength" step="any" title="Please enter a non-negative number (e.g., 0 or 50.2)." required>
+                </div>
+                <div>
+                    <label for="cement_specific_gravity" title="Specific gravity of cement, measured in grams per cm³. This is the density of cement, typically ranging from 3.0 to 3.15 g/cm³, used to calculate the volume of cement in the mix.">Cement specific gravity (ce_sg) (g/cm³):</label>
+                    <input type="number" id="cement_specific_gravity" name="cement_specific_gravity" step="any" title="Please enter a non-negative number (e.g., 0 or 3.15)." required>
+                </div>
+                <div>
+                    <label for="fine_aggregate_quantity" title="Amount of fine aggregate (e.g., sand), in kilograms, used in the concrete mix. Fine aggregate fills voids and enhances the workability of concrete.">Fine aggregate quantity (f_q) (kg):</label>
+                    <input type="number" id="fine_aggregate_quantity" name="fine_aggregate_quantity" step="any" title="Please enter a non-negative number (e.g., 0 or 676.0)." required>
+                </div>
+                <div>
+                    <label for="fine_aggregate_specific_gravity" title="Specific gravity of fine aggregate, measured in grams per cm³. This indicates the density of sand, typically around 2.6 to 2.7 g/cm³, used to calculate mix proportions.">Fine aggregate specific gravity (f_sg) (g/cm³):</label>
+                    <input type="number" id="fine_aggregate_specific_gravity" name="fine_aggregate_specific_gravity" step="any" title="Please enter a non-negative number (e.g., 0 or 2.65)." required>
+                </div>
+                <div>
+                    <label for="coarse_aggregate_quantity" title="Amount of coarse aggregate (e.g., gravel or stone), in kilograms, used in the concrete mix. Coarse aggregate provides structure and strength to concrete.">Coarse aggregate quantity (c_q) (kg):</label>
+                    <input type="number" id="coarse_aggregate_quantity" name="coarse_aggregate_quantity" step="any" title="Please enter a non-negative number (e.g., 0 or 1040.0)." required>
+                </div>
+                <div>
+                    <label for="coarse_aggregate_specific_gravity" title="Specific gravity of coarse aggregate, measured in grams per cm³. This value, typically around 2.6 to 2.8 g/cm³, determines the density of gravel or stone in the mix.">Coarse aggregate specific gravity (ca_sg) (g/cm³):</label>
+                    <input type="number" id="coarse_aggregate_specific_gravity" name="coarse_aggregate_specific_gravity" step="any" title="Please enter a non-negative number (e.g., 0 or 2.7)." required>
+                </div>
+                <div>
+                    <label for="water" title="Amount of water, in kilograms, used in the concrete mix. Water is essential for cement hydration and to provide workability to the mix.">Water (w) (kg):</label>
+                    <input type="number" id="water" name="water" step="any" title="Please enter a non-negative number (e.g., 0 or 162.0)." required>
+                </div>
+                <div>
+                    <label for="water_cement_ratio" title="Water-to-cement ratio, the ratio of water mass to cement mass in the mix. This ratio significantly affects the strength and durability of concrete (lower ratios typically result in stronger concrete).">Water/cement ratio (w/c):</label>
+                    <input type="number" id="water_cement_ratio" name="water_cement_ratio" step="any" title="Please enter a non-negative number (e.g., 0 or 0.3)." required>
+                </div>
+                <div>
+                    <label for="plastic_quantity" title="Amount of plasticizer (superplasticizer), in kilograms, added to the concrete mix. Plasticizers improve workability without increasing water content.">Plastic quantity (p_q) (kg):</label>
+                    <input type="number" id="plastic_quantity" name="plastic_quantity" step="any" title="Please enter a non-negative number (e.g., 0 or 2.5)." required>
+                </div>
+                <div>
+                    <label for="plastic_tensile_strength" title="Tensile strength of the plasticizer, measured in megapascals (MPa). This indicates the plasticizer's ability to withstand tensile forces, if relevant to the concrete structure.">Plastic tensile strength (p_ts) (MPa):</label>
+                    <input type="number" id="plastic_tensile_strength" name="plastic_tensile_strength" step="any" title="Please enter a non-negative number (e.g., 0 or 10.0)." required>
+                </div>
+                <div>
+                    <label for="plastic_specific_gravity" title="Specific gravity of the plasticizer, measured in grams per cm³. This value determines the volume of the plasticizer in the mix.">Plastic specific gravity (p_sg) (g/cm³):</label>
+                    <input type="number" id="plastic_specific_gravity" name="plastic_specific_gravity" step="any" title="Please enter a non-negative number (e.g., 0 or 1.08)." required>
+                </div>
+                <div>
+                    <label for="slump" title="Slump, measured in centimeters, is an indicator of the workability (flowability) of fresh concrete. Higher slump values indicate easier workability but may affect strength.">Slump (slump) (cm):</label>
+                    <input type="number" id="slump" name="slump" step="any" title="Please enter a non-negative number (e.g., 0 or 10.0)." required>
+                </div>
+                <div>
+                    <label for="concrete_specific_gravity" title="Specific gravity of concrete, the density of the concrete mix, measured in kg/m³, typically ranging from 2200 to 2500 kg/m³.">Concrete specific gravity (c_sg) (kg/m³):</label>
+                    <input type="number" id="concrete_specific_gravity" name="concrete_specific_gravity" step="any" title="Please enter a non-negative number (e.g., 0 or 2400.0)." required>
+                </div>
+                <button type="submit">PREDICT</button>
+                <div class="button-error"></div>
+                {% if error %}
+                <div class="error">{{ error }}</div>
+                {% endif %}
+                {% if prediction is not none %}
+                <div class="result">
+                    Predicted Concrete Compressive Strength (c_cs): <span>{{ prediction | round(2) }}</span> MPa
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Predict - Concrete Compressive Strength</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@100;300;400;700&family=Open+Sans:wght@600&display=swap" rel="stylesheet">
+</head>
+<body class="predict-page">
+    {% include 'navbar.html' %}
+
+    <div class="main-container">
+        <div class="right-section">
+            <div class="csv-upload-section">
+                <h3>Batch Prediction from CSV</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" accept=".csv" required>
+                    <button type="submit">UPLOAD & PREDICT CSV</button>
+                </form>
+
+                {% if predictions %}
+                <h4>Predictions:</h4>
+                <div class="csv-results">
+                    {{ predictions | safe }}
+                </div>
+                {% endif %}
+
+                {% if error %}
+                <div class="error">{{ error }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
