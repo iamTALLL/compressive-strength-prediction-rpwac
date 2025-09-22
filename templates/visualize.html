@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Histograms Gallery{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="visualize-container">
+
+    <div class="box histogram-box">
+      <h3>📊 Histograms Gallery</h3>
+      {% if histograms and histograms|length > 0 %}
+        <div class="gallery">
+          {% for hist in histograms %}
+            <div class="hist-img">
+              <img src="{{ url_for('static', filename=hist) }}" alt="Histogram">
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No histogram images found.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

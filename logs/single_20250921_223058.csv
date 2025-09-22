@@ -1,0 +1,2 @@
+cement_dosage,cement_compressive_strength,cement_specific_gravity,fine_aggregate_quantity,fine_aggregate_specific_gravity,coarse_aggregate_quantity,coarse_aggregate_specific_gravity,water,water_cement_ratio,plastic_quantity,plastic_tensile_strength,plastic_specific_gravity,slump,concrete_specific_gravity,Predicted_c_cs
+488.1,37.9,3.14,654.9,2.75,976.1,2.51,209.9,0.42,0.0,60.0,1.11,6.0,2.452,39.674934

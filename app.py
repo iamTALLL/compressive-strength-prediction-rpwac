@@ -9,6 +9,7 @@ import platform
 import pandas as pd
 import json
 import datetime
+import matplotlib
 
 app = Flask(__name__, template_folder='templates')
 LOG_DIR = 'logs'
@@ -17,6 +18,8 @@ def list_logs():
     files = [f for f in os.listdir(LOG_DIR) if f.endswith('.csv')]
     files.sort()  # sort theo tên hoặc timestamp
     return files
+
+
 
 # Load scaler and model from notebook directory
 try:
@@ -57,7 +60,17 @@ def free_port(port):
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    histogram_dir = os.path.join("static", "histograms")
+    histograms = [
+        fname
+        for fname in os.listdir(histogram_dir)
+        if fname.lower().endswith((".png", ".jpg", ".jpeg"))
+    ]
+    return render_template('home.html', histograms=histograms)
+
+
+
+
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
@@ -143,7 +156,8 @@ def predict_csv():
         except Exception as e:
             return render_template('predict_csv.html', predictions=None, error=f"Error processing file: {e}")
     
-    return render_template('predict_csv.html', predictions=None, error=None)
+    df_html = df.to_html(classes="table table-bordered csv-results", index=False)
+    return render_template('predict_csv.html', predictions=df_html, error=None)
 
 
 @app.route('/chart', methods=['GET'])
@@ -177,6 +191,8 @@ def upload_reality(log_file):
     df_pred['y_true'] = df_actual.iloc[:, -1]  # giả sử cột cuối là reality
     df_pred.to_csv(path, index=False)
     return jsonify({'success': True})
+
+
 
 def signal_handler(sig, frame):
     print('Shutting down server... (Ctrl+C detected)')

@@ -408,3 +408,36 @@ button:active {
     }
 }
 
+/* Style bảng kết quả CSV */
+.csv-results table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.csv-results th,
+.csv-results td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+/* Zebra stripe */
+.csv-results tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Header */
+.csv-results th {
+  background-color: #90001d;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Highlight cột dự đoán */
+.csv-results td:last-child {
+  background-color: #fff4d6; /* vàng nhạt */
+  font-weight: bold;
+  color: #90001d;
+}

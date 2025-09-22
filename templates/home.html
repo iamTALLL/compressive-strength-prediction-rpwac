@@ -1,20 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Predict Concrete Compressive Strength</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@100;300;400;700&family=Open+Sans:wght@600&display=swap" rel="stylesheet">
-</head>
-<body class="home-page">
-    {% include 'navbar.html' %}
-    <div class="main-container">
-        <div class="content">
-            <h1 class="slogan-line1">RECYCLED CONCRETE</h1>
-            <h1 class="slogan-line2">A GREEN SOLUTION FOR CONSTRUCTION</h1>
-            <p class="subtitle">Turning construction waste into sustainable building materials – saving resources, protecting the environment, and shaping greener cities.</p>
-        </div>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<div class="container-fluid mt-5 text-center">
+  <img src="{{ url_for('static', filename='detai.png') }}" 
+       alt="Ảnh minh họa" 
+       class="img-fluid hero-banner">
+</div>
+
+<!-- Introduction + About the Model -->
+<div class="container mt-5">
+  <div class="row">
+    <!-- Introduction -->
+    <div class="col-md-6 mb-4">
+      <h2 class="section-title">Introduction</h2>
+      <div class="info-card shadow-sm">
+        <p>
+          Trong thế kỷ XXI, nhân loại đối mặt đồng thời với <b>khủng hoảng rác thải nhựa</b> 
+          và <b>nhu cầu phát triển vật liệu xây dựng bền vững</b>. 
+          Ý tưởng tái sử dụng nhựa phế thải làm một phần cốt liệu trong bê tông 
+          (Recycled Plastic Waste Aggregate Concrete – RPWAC) vừa giúp xử lý rác thải, 
+          vừa tiết kiệm tài nguyên khoáng sản.
+        </p>
+        <p>
+          Nghiên cứu này ứng dụng <b>trí tuệ nhân tạo (AI)</b> để dự đoán và phân tích 
+          cường độ nén của bê tông sử dụng nhựa tái chế.
+        </p>
+        <p>
+          Dự án này không chỉ kiểm chứng tính khả thi của RPWAC, 
+          mà còn thể hiện cách <b>AI kết hợp cùng khoa học vật liệu</b> 
+          để góp phần vào xu thế <b>kinh tế tuần hoàn và phát triển bền vững</b>.
+        </p>
+      </div>
     </div>
-</body>
-</html>
+
+    <!-- About the Model -->
+    <div class="col-md-6 mb-4">
+      <h2 class="section-title">About the Model</h2>
+      <div class="info-card shadow-sm">
+        <p>
+          Hệ thống sử dụng mô hình <b>Gradient Boosting (GBX)</b> – 
+          một thuật toán học máy mạnh mẽ trong việc <i>dự đoán dữ liệu phi tuyến</i> 
+          thông qua việc kết hợp nhiều cây quyết định yếu thành một mô hình mạnh.
+        </p>
+        <p>
+          Để tối ưu các siêu tham số, nhóm kết hợp với <b>Whale Optimization Algorithm (WOA)</b>, 
+          một thuật toán metaheuristic lấy cảm hứng từ <i>hành vi săn mồi của cá voi lưng gù</i>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
