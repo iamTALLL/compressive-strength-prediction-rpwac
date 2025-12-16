@@ -1,0 +1,149 @@
+2025-10-27 21:10:47,425 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:10:47,436 - [INFO] - Starting server on port 5004...
+2025-10-27 21:10:49,216 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:10:49,220 - [INFO] - Starting server on port 5004...
+2025-10-27 21:11:05,552 - [INFO] - Accessing home page.
+2025-10-27 21:12:38,878 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:12:38,881 - [INFO] - Starting server on port 5004...
+2025-10-27 21:12:40,605 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:12:40,608 - [INFO] - Starting server on port 5004...
+2025-10-27 21:12:40,663 - [INFO] - Accessing home page.
+2025-10-27 21:15:57,393 - [INFO] - Model and scaler loaded successfully.
+2025-10-27 21:15:57,401 - [INFO] - Starting server on port 5004...
+2025-10-27 21:15:59,081 - [INFO] - Accessing home page.
+2025-11-26 21:50:56,162 - [INFO] - Model and scaler loaded successfully.
+2025-11-26 21:50:56,169 - [INFO] - Starting server on port 5004...
+2025-11-26 21:51:03,563 - [INFO] - Accessing home page.
+2025-11-26 21:51:18,788 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:51:18,823 - [ERROR] - Error processing batch file: X has 15 features, but MinMaxScaler is expecting 14 features as input.
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 149, in predict_csv
+    scaled_X = scaler.transform(X)
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\_set_output.py", line 316, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\preprocessing\_data.py", line 545, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\validation.py", line 2975, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\validation.py", line 2839, in _check_n_features
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: X has 15 features, but MinMaxScaler is expecting 14 features as input.
+2025-11-26 21:52:05,675 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:52:05,703 - [INFO] - Batch prediction successful and logged to batch_20251126_215205.csv
+2025-11-26 21:53:51,040 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:53:51,050 - [INFO] - Batch prediction successful and logged to batch_20251126_215351.csv
+2025-12-16 13:39:20,228 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:39:20,230 - [INFO] - Feature bounds created.
+2025-12-16 13:39:20,235 - [INFO] - Starting server on port 5004...
+2025-12-16 13:39:31,403 - [INFO] - Accessing home page.
+2025-12-16 13:39:31,437 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\NCKH2025\app.py", line 259, in home
+    return render_template('home.html', histograms=histograms)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\NCKH2025\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\NCKH2025\templates\base.html", line 40, in top-level template code
+    <a class="nav-link" href="{{ url_for('optimize') }}">Inverse Design</a>
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\NCKH2025\venv\lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'optimize'. Did you mean 'home' instead?
+2025-12-16 13:42:39,727 - [INFO] - Accessing home page.
+2025-12-16 13:42:40,505 - [INFO] - Accessing home page.
+2025-12-16 13:42:55,267 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:42:55,267 - [INFO] - Feature bounds created.
+2025-12-16 13:42:55,274 - [INFO] - Starting server on port 5004...
+2025-12-16 13:42:57,098 - [INFO] - Accessing home page.
+2025-12-16 13:42:57,111 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\NCKH2025\app.py", line 260, in home
+    return render_template('home.html',
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\NCKH2025\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\NCKH2025\templates\base.html", line 40, in top-level template code
+    <a class="nav-link" href="{{ url_for('optimize') }}">Inverse Design</a>
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\NCKH2025\venv\lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'optimize'. Did you mean 'home' instead?
+2025-12-16 13:44:44,233 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:44:44,234 - [INFO] - Feature bounds created.
+2025-12-16 13:44:44,241 - [INFO] - Starting server on port 5004...
+2025-12-16 13:44:46,408 - [INFO] - Accessing home page.
+2025-12-16 13:44:59,401 - [INFO] - Accessing home page.
+2025-12-16 13:45:12,577 - [INFO] - Accessing home page.
+2025-12-16 13:45:26,224 - [INFO] - Accessing home page.
+2025-12-16 13:45:34,267 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:45:34,280 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = FOX.DevFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:06,939 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:49:06,949 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = OriginalFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:15,787 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:49:15,796 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = OriginalFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:30,278 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:49:30,278 - [INFO] - Feature bounds created.
+2025-12-16 13:49:30,284 - [INFO] - Starting server on port 5004...
+2025-12-16 13:49:31,895 - [INFO] - Accessing home page.
+2025-12-16 13:49:36,731 - [INFO] - Received POST request for Inverse Design.

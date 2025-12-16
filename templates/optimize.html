@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Inverse Design{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center section-title mb-4">🧪 Inverse Design: Tối Ưu Hóa Công Thức Bê Tông</h1>
+    <p class="text-center text-muted">Sử dụng thuật toán FOX (một biến thể của GA) để tìm ra công thức vật liệu tối ưu, đáp ứng cường độ nén mục tiêu (Target CS) trong khi tối thiểu hóa xi măng và tối đa hóa nhựa tái chế.</p>
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <strong>Lỗi / Cảnh báo:</strong> {{ error }}
+    </div>
+    {% endif %}
+    
+    {% if not optimize_enabled %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Cảnh báo:</strong> Tính năng Inverse Design (Tối ưu hóa) đã bị vô hiệu hóa do không tìm thấy thư viện <code>mealpy</code>. Vui lòng kiểm tra cài đặt.
+    </div>
+    {% endif %}
+
+    {% if optimize_enabled %}
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Tham Số Tối Ưu Hóa</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                
+                <div class="row mb-4 border-bottom pb-3">
+                    <div class="col-md-12">
+                        <h4>1. Target Compressive Strength (Mục tiêu Cường độ Nén)</h4>
+                        <div class="form-group">
+                            <label for="target_cs" class="font-weight-bold">Target CS (MPa):</label>
+                            <input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required 
+                                   value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
+                                   placeholder="Ví dụ: 45.0">
+                            <small class="form-text text-muted">Giá trị mục tiêu cho cường độ nén (10 - 90 MPa).</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>2. Fixed Components (Ràng buộc cố định)</h4>
+                <p class="text-muted">Nhập giá trị (kg/m³) cho các thành phần bạn muốn giữ cố định. Để trống hoặc nhập **0** để thuật toán FOX tối ưu hóa giá trị đó.</p>
+                
+                <div class="row">
+                    {% for feat in all_features %}
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="form-group">
+                            <label for="{{ feat }}" class="small text-muted">{{ name_map[feat] }} ({{ feat }}):</label>
+                            <input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control form-control-sm" 
+                                   placeholder="0 (Optimize)">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-magic"></i> Run Optimization
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if predicted_cs %}
+    <div class="card shadow-lg mb-5 border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-check-circle"></i> Kết Quả Công Thức Tối Ưu</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center mb-4">
+                <div class="col-md-6 border-right">
+                    <p class="mb-1 text-muted">Target Compressive Strength</p>
+                    <h2 class="display-4 text-primary">{{ target_cs }} MPa</h2>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted">Predicted CS (Optimized Mix)</p>
+                    <h2 class="display-4 text-success">{{ predicted_cs }} MPa</h2>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 border-top pt-3">Chi Tiết Thành Phần Tối Ưu (kg/m³)</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover results-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Thành Phần</th>
+                            <th>Tên viết tắt</th>
+                            <th>Giá Trị Tối Ưu (kg/m³)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for name, value in optimized_list %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ all_features[loop.index0] }}</td>
+                            <td><strong>{{ value }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="alert alert-info small mt-3">
+                <i class="fas fa-info-circle"></i> 
+                Mục tiêu của thuật toán là tìm công thức có tổng thể tích xấp xỉ 1 m³, tối thiểu hóa Xi măng ({{ L1 }} * c_d), và tối đa hóa Nhựa ({{ L2 }} * p_q), trong khi cường độ nén gần với Target CS nhất.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

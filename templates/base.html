@@ -36,7 +36,11 @@
               <a class="nav-link" href="{{ url_for('predict') }}">Predict</a>
             </li>
 
-          
+            {% if optimize_enabled %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('inverse_design') }}">Inverse Design</a> 
+            </li>
+            {% endif %}
 
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('chart') }}">Chart</a>

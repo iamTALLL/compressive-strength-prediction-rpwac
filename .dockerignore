@@ -1,0 +1,29 @@
+# ------------------------------------
+# 1. Các Thư mục và File Dự án (Development)
+# ------------------------------------
+.git
+.gitignore
+.DS_Store
+Thumbs.db
+*.log
+*.sqlite3
+
+# ------------------------------------
+# 2. Môi trường Python (Virtual Environments)
+# ------------------------------------
+venv/
+env/
+__pycache__/
+*.pyc
+
+# ------------------------------------
+# 3. Thư mục và File Log Cục Bộ (Được tạo ra bởi app.py)
+# ------------------------------------
+logs/
+other/
+
+# ------------------------------------
+# 4. Docker Files (Không cần sao chép vào trong image)
+# ------------------------------------
+Dockerfile
+.dockerignore
