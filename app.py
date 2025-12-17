@@ -107,7 +107,6 @@ except Exception as e:
     sys.exit(1)
 
 if OPTIMIZE_ENABLED:
-    # Các hằng số từ mã Gradio
     PENALTY_FACTOR = 50000 
     V_PLASTIC_ABSOLUTE_MAX = 0.20
     V_MIN_TARGET = 0.95
@@ -142,7 +141,7 @@ if OPTIMIZE_ENABLED:
                 )
 
             def fitness(self, candidate):
-                # Khôi phục vector đầu vào đầy đủ (14 chiều)
+                # 1. Khôi phục vector đầu vào đầy đủ (14 chiều)
                 full_vector = [0]*len(all_features)
                 for i, idx in enumerate(fixed_idx):
                     full_vector[idx] = fixed_values[i]
@@ -151,63 +150,62 @@ if OPTIMIZE_ENABLED:
                 
                 feature_map = dict(zip(all_features, full_vector))
                 
-                # Lấy các khối lượng (kg/m3)
+                # --- Lấy khối lượng và tỷ trọng ---
                 c_d_mass = feature_map.get('c_d', 0)
                 p_q_mass = feature_map.get('p_q', 0)
                 f_q_mass = feature_map.get('f_q', 0)
                 c_q_mass = feature_map.get('c_q', 0)
                 w_mass = feature_map.get('w', 0)
                 
-                # Lấy và XỬ LÝ các giá trị Tỷ trọng (SG)
-                ce_sg = feature_map.get('ce_sg', 1.0)
-                f_sg = feature_map.get('f_sg', 1.0)
-                ca_sg = feature_map.get('ca_sg', 1.0)
-                p_sg = feature_map.get('p_sg', 1.0)
-
-                # Đảm bảo không có mẫu số nào bằng 0
-                ce_sg = ce_sg if ce_sg != 0 else 1.0
-                f_sg = f_sg if f_sg != 0 else 1.0
-                ca_sg = ca_sg if ca_sg != 0 else 1.0
-                p_sg = p_sg if p_sg != 0 else 1.0
+                ce_sg = feature_map.get('ce_sg', 1.0) or 1.0
+                f_sg = feature_map.get('f_sg', 1.0) or 1.0
+                ca_sg = feature_map.get('ca_sg', 1.0) or 1.0
+                p_sg = feature_map.get('p_sg', 1.0) or 1.0
                 
-                # Tính thể tích từng thành phần (V = M / (SG * 1000) - TÍNH VỚI ĐƠN VỊ m3)
+                # --- Tính toán thể tích (m3) ---
                 V_cement = c_d_mass / (ce_sg * 1000)
                 V_fine_agg = f_q_mass / (f_sg * 1000)
                 V_coarse_agg = c_q_mass / (ca_sg * 1000)
                 V_plastic = p_q_mass / (p_sg * 1000)
-                V_water = w_mass / 1000 # RHO_WATER = 1000
+                V_water = w_mass / 1000
 
                 V_total = V_cement + V_fine_agg + V_coarse_agg + V_plastic + V_water
 
-                # --- TÍNH HÌNH PHẠT (Penalty Logic) ---
-                penalty_total_volume = 0
-                # Ràng buộc: Thể tích Khối bê tông (1m3)
-                if V_total < V_MIN_TARGET:
-                    violation = V_MIN_TARGET - V_total
-                    penalty_total_volume = PENALTY_FACTOR * violation
-                elif V_total > V_MAX_TARGET:
-                    violation = V_total - V_MAX_TARGET
-                    penalty_total_volume = PENALTY_FACTOR * violation
-                    
-                penalty_plastic_volume = 0
-                # Ràng buộc: Thể tích nhựa không quá 20%
-                if V_plastic > V_PLASTIC_ABSOLUTE_MAX:
-                    violation = V_plastic - V_PLASTIC_ABSOLUTE_MAX
-                    # Penalty cao hơn (10x) vì đây là ràng buộc cứng quan trọng
-                    penalty_plastic_volume = PENALTY_FACTOR * 10 * violation
-                
                 # 2. Dự đoán Cường độ Nén (CS)
                 x_scaled = scaler.transform(np.array([full_vector])) 
                 pred_CS = model.predict(x_scaled)[0]
-                delta_CS = abs(pred_CS - target_CS) # Mục tiêu 1: CS = Target CS
+
+                # --- TÍNH HÌNH PHẠT (Penalty Logic) ---
+                
+                # Hình phạt thể tích tổng (phải gần 1m3)
+                penalty_total_volume = 0
+                if V_total < V_MIN_TARGET:
+                    penalty_total_volume = PENALTY_FACTOR * (V_MIN_TARGET - V_total)
+                elif V_total > V_MAX_TARGET:
+                    penalty_total_volume = PENALTY_FACTOR * (V_total - V_MAX_TARGET)
+                    
+                # Hình phạt tỷ lệ nhựa (không quá 20%)
+                penalty_plastic_volume = 0
+                if V_plastic > V_PLASTIC_ABSOLUTE_MAX:
+                    penalty_plastic_volume = PENALTY_FACTOR * 10 * (V_plastic - V_PLASTIC_ABSOLUTE_MAX)
+
+                # Dự đoán CS phải >= Target CS
+                penalty_insufficient_CS = 0
+                if pred_CS < target_CS:
+                    # Nếu nhỏ hơn mục tiêu, áp đặt hình phạt nặng
+                    penalty_insufficient_CS = PENALTY_FACTOR * (target_CS - pred_CS)
+                
+                # Tính độ lệch cường độ (vẫn giữ để GA tìm điểm gần nhất phía trên target)
+                delta_CS = abs(pred_CS - target_CS)
                 
                 # 3. Kết hợp Đa Mục tiêu
                 total_fitness = (
                     delta_CS + 
-                    (L1 * c_d_mass) - # Mục tiêu 2: Tối thiểu Xi măng (c_d_mass)
-                    (L2 * p_q_mass) + # Mục tiêu 3: Tối đa Nhựa (p_q_mass)
+                    (L1 * c_d_mass) -     # Tối thiểu Xi măng
+                    (L2 * p_q_mass) +     # Tối đa Nhựa
                     penalty_total_volume + 
-                    penalty_plastic_volume
+                    penalty_plastic_volume +
+                    penalty_insufficient_CS   # Hình phạt nếu thấp hơn mục tiêu
                 )
                 return total_fitness
         
