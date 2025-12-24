@@ -161,3 +161,9 @@ AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
 2025-12-17 20:12:04,901 - [INFO] - Batch prediction successful and logged to batch_20251217_201204.csv
 2025-12-17 20:12:27,744 - [INFO] - Accessing home page.
 2025-12-17 20:13:41,863 - [INFO] - Received POST request for Inverse Design.
+2025-12-24 16:56:01,548 - [INFO] - Model and scaler loaded successfully.
+2025-12-24 16:56:01,549 - [INFO] - Feature bounds created.
+2025-12-24 16:56:01,555 - [INFO] - Starting server on port 5004...
+2025-12-24 16:56:03,261 - [INFO] - Accessing home page.
+2025-12-24 16:56:42,736 - [INFO] - Accessing home page.
+2025-12-24 16:56:46,393 - [INFO] - Received POST request for Inverse Design.

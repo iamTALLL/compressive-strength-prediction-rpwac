@@ -1,55 +1,249 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
-
 {% block content %}
-<!-- Hero Banner -->
-<div class="container-fluid mt-5 text-center">
-  <img src="{{ url_for('static', filename='detai.png') }}" 
-       alt="Ảnh minh họa" 
-       class="img-fluid hero-banner">
+
+<!-- Hero Banner full width -->
+<div class="container-fluid mt-5 text-center px-0">
+    <img src="{{ url_for('static', filename='detai.png') }}"
+         alt="Project illustration"
+         class="img-fluid hero-banner w-100">
 </div>
 
-<!-- Introduction + About the Model -->
-<div class="container mt-5">
-  <div class="row">
-    <!-- Introduction -->
-    <div class="col-md-6 mb-4">
-      <h2 class="section-title">Introduction</h2>
-      <div class="info-card shadow-sm">
-        <p>
-          Trong thế kỷ XXI, nhân loại đối mặt đồng thời với <b>khủng hoảng rác thải nhựa</b> 
-          và <b>nhu cầu phát triển vật liệu xây dựng bền vững</b>. 
-          Ý tưởng tái sử dụng nhựa phế thải làm một phần cốt liệu trong bê tông 
-          (Recycled Plastic Waste Aggregate Concrete – RPWAC) vừa giúp xử lý rác thải, 
-          vừa tiết kiệm tài nguyên khoáng sản.
-        </p>
-        <p>
-          Nghiên cứu này ứng dụng <b>trí tuệ nhân tạo (AI)</b> để dự đoán và phân tích 
-          cường độ nén của bê tông sử dụng nhựa tái chế.
-        </p>
-        <p>
-          Dự án này không chỉ kiểm chứng tính khả thi của RPWAC, 
-          mà còn thể hiện cách <b>AI kết hợp cùng khoa học vật liệu</b> 
-          để góp phần vào xu thế <b>kinh tế tuần hoàn và phát triển bền vững</b>.
-        </p>
-      </div>
-    </div>
+<!-- 4 sections full width, all white background -->
+<div class="content-sections">
 
-    <!-- About the Model -->
-    <div class="col-md-6 mb-4">
-      <h2 class="section-title">About the Model</h2>
-      <div class="info-card shadow-sm">
-        <p>
-          Hệ thống sử dụng mô hình <b>Gradient Boosting (GBX)</b> – 
-          một thuật toán học máy mạnh mẽ trong việc <i>dự đoán dữ liệu phi tuyến</i> 
-          thông qua việc kết hợp nhiều cây quyết định yếu thành một mô hình mạnh.
-        </p>
-        <p>
-          Để tối ưu các siêu tham số, nhóm kết hợp với <b>Whale Optimization Algorithm (WOA)</b>, 
-          một thuật toán metaheuristic lấy cảm hứng từ <i>hành vi săn mồi của cá voi lưng gù</i>.
-        </p>
-      </div>
-    </div>
-  </div>
+    <!-- 1. Introduction -->
+    <section class="section-bg-white">
+        <div class="py-5 px-0">
+            <div class="text-center">
+                <!-- Icon -->
+                <div class="mb-4" data-aos="fade-down" data-aos-duration="800">
+                    <i class="fas fa-globe-americas fa-4x fa-5x-lg text-primary"></i>
+                </div>
+                <!-- Title with fixed underline -->
+                <h3 class="section-title mb-5 position-relative d-inline-block"
+                    data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    INTRODUCTION
+                </h3>
+                <!-- Content -->
+                <div class="mx-auto px-3 px-md-5" style="max-width: 1100px;"
+                     data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                    <p class="large-text text-justify">
+                        In the 21st century, humanity faces the plastic waste crisis and the need for sustainable construction materials.
+                        Plastic waste breaks down due to physical forces, causing serious environmental problems.
+                        Governments and ministries have issued policies to reduce the impact of plastic waste on the environment.
+                    </p>
+                    <p class="large-text text-justify">
+                        Recycled plastic waste aggregate concrete is a promising solution to replace traditional materials,
+                        reducing plastic waste while conserving natural resources.
+                        Plastic is used in concrete in two ways: as aggregate and fibers, providing economic benefits and environmental friendliness.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Research Objectives -->
+    <section class="section-bg-white">
+        <div class="py-5 px-0">
+            <div class="text-center">
+                <div class="mb-4" data-aos="fade-down" data-aos-duration="800">
+                    <i class="fas fa-bullseye fa-4x fa-5x-lg text-success"></i>
+                </div>
+                <h3 class="section-title mb-5 position-relative d-inline-block"
+                    data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    RESEARCH OBJECTIVES
+                </h3>
+                <div class="mx-auto px-3 px-md-5" style="max-width: 1100px;"
+                     data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                    <p class="large-text text-justify">
+                        This research aims to predict the compressive strength of concrete using recycled plastic by:
+                    </p>
+                    <ul class="text-left">
+                        <li class="large-text">Using various machine learning models</li>
+                        <li class="large-text">Integrating optimization algorithms to improve accuracy</li>
+                        <li class="large-text">Developing a user-friendly web application</li>
+                    </ul>
+                    <p class="large-text text-justify mt-4">
+                        Research object: Concrete using recycled plastic aggregate<br>
+                        Research scope: Compressive strength of concrete
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. About the Prediction Model -->
+    <section class="section-bg-white">
+        <div class="py-5 px-0">
+            <div class="text-center">
+                <div class="mb-4" data-aos="fade-down" data-aos-duration="800">
+                    <i class="fas fa-brain fa-4x fa-5x-lg text-info"></i>
+                </div>
+                <h3 class="section-title mb-5 position-relative d-inline-block"
+                    data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    ABOUT THE PREDICTION MODEL
+                </h3>
+                <div class="mx-auto px-3 px-md-5" style="max-width: 1100px;"
+                     data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                    <p class="large-text text-justify">
+                        The study is based on a dataset of 257 laboratory compression tests.
+                        After evaluating multiple machine learning models, XGBoost demonstrated superior performance.
+                    </p>
+                    <p class="large-text text-justify">
+                        Initial results: R² = 0.921, RMSE = 3.648 MPa, MAE = 2.918 MPa.<br>
+                        After hyperparameter optimization using Whale Optimization Algorithm:<br>
+                        R² = 0.94, RMSE ≈ 3.18 MPa, MAE ≈ 2.41 MPa.
+                    </p>
+                    <p class="large-text text-justify">
+                        These results confirm the effectiveness of combining metaheuristic algorithms in predicting the compressive strength of recycled concrete.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Key Features - 3 ô ngang có khung, đồng bộ chữ -->
+    <section class="section-bg-white">
+        <div class="py-5 px-0">
+            <div class="text-center">
+                <!-- Icon chính -->
+                <div class="mb-4" data-aos="fade-down" data-aos-duration="800">
+                    <i class="fas fa-star fa-4x fa-5x-lg text-warning"></i>
+                </div>
+                <!-- Tiêu đề -->
+                <h3 class="section-title mb-5 position-relative d-inline-block"
+                    data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    KEY FEATURES
+                </h3>
+                <!-- 3 ô ngang -->
+                <div class="container" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                    <div class="row justify-content-center">
+                        <!-- Ô 1 -->
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="key-feature-card border rounded shadow-sm p-4 h-100 text-center bg-white">
+                                <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                                <h4 class="feature-title mb-3">Sustainable and environmentally friendly</h4>
+                                <p class="large-text">
+                                    Reuse plastic waste, reduce pressure on natural resources, and promote sustainable development in construction.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Ô 2 -->
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="key-feature-card border rounded shadow-sm p-4 h-100 text-center bg-white">
+                                <i class="fas fa-microchip fa-3x text-primary mb-3"></i>
+                                <h4 class="feature-title mb-3">Optimized artificial intelligence</h4>
+                                <p class="large-text">
+                                    Apply XGBoost combined with WOA, achieving high accuracy (R² = 0.94).
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Ô 3 -->
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="key-feature-card border rounded shadow-sm p-4 h-100 text-center bg-white">
+                                <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                                <h4 class="feature-title mb-3">High accuracy and reliability</h4>
+                                <p class="large-text">
+                                    Low error rates, meeting the requirements for analysis and real-world applications.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!-- AOS Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        once: false,
+        duration: 1000,
+        easing: 'ease-out-quart',
+        mirror: true
+    });
+</script>
+
+<style>
+    /* Full width, no outer margin/padding */
+    .content-sections {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .content-sections section {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+    }
+
+    /* All white background */
+    .section-bg-white { background-color: #ffffff; }
+
+    /* Reduced title size */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        padding-bottom: 15px;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 4px;
+        background-color: #2c3e50;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 2.2rem;
+        }
+        .fa-5x-lg {
+            font-size: 5.5rem !important;
+        }
+        .section-title::after {
+            width: 160px;
+        }
+    }
+
+    .large-text {
+        font-size: 1.2rem;
+        line-height: 1.8;
+    }
+
+    /* Đồng bộ kích thước tiêu đề phụ trong Key Features */
+    .feature-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .hero-banner {
+        max-height: 550px;
+        object-fit: cover;
+    }
+
+    /* Khung cho 3 ô Key Features */
+    .key-feature-card {
+        transition: all 0.3s ease;
+        border-color: #dee2e6 !important;
+    }
+    .key-feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+</style>
+
 {% endblock %}

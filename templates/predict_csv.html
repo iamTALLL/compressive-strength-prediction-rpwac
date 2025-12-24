@@ -1,29 +1,108 @@
 {% extends "base.html" %}
 {% block title %}Batch Prediction{% endblock %}
-
 {% block content %}
 <div class="main-container">
     <div class="right-section">
-        <div class="csv-upload-section card shadow-sm p-4">
-            <h3 class="mb-3">Batch Prediction from CSV</h3>
-            <form method="POST" enctype="multipart/form-data" class="mb-3">
-                <input type="file" name="file" accept=".csv" class="form-control mb-2" required>
-                <button type="submit" class="btn btn-primary">UPLOAD & PREDICT CSV</button>
-            </form>
+        <div class="csv-upload-section card shadow-sm p-3">
+            <div class="card-body p-4">
+                <!-- Tiêu đề đồng bộ với trang Predict/Home -->
+                <h2 class="section-title mb-5 text-center mx-auto position-relative d-block">
+                    BATCH PREDICTION FROM CSV
+                </h2>
 
-            {% if predictions %}
-            <h4 class="mt-4">Predictions:</h4>
-            <div class="csv-results">
-                <div class="table-responsive">
-                    {{ predictions | safe }}
-                </div>
-                {% endif %}
+                <form method="POST" enctype="multipart/form-data" novalidate>
+                    <div class="mb-4 text-center">
+                        <!-- Custom file input đẹp -->
+                        <div class="custom-file-upload d-inline-block">
+                            <input type="file" name="file" id="file" accept=".csv" required style="display: none;">
+                            <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="document.getElementById('file').click();">
+                                Choose file
+                            </button>
+                            <span class="ms-3 text-muted" id="file-name">No file chosen</span>
+                        </div>
+                        <div class="form-text mt-2">Only .csv files are accepted</div>
+                    </div>
+                    <div class="text-center">
+                        <!-- Nút màu đỏ #90001d -->
+                        <button type="submit" class="btn px-5 py-3 fw-bold text-white custom-red-btn">UPLOAD & PREDICT CSV</button>
+                    </div>
+                </form>
 
                 {% if error %}
-                <div class="alert alert-danger mt-3">{{ error }}</div>
+                <div class="alert alert-danger mt-4">{{ error }}</div>
+                {% endif %}
+
+                {% if predictions %}
+                <h4 class="mt-5 mb-4 text-center">PREDICTIONS</h4>
+                <div class="csv-results">
+                    <div class="table-responsive">
+                        {{ predictions | safe }}
+                    </div>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Nút màu đỏ chủ đạo #90001d */
+    .custom-red-btn {
+        background-color: #90001d;
+        border-color: #90001d;
+        transition: all 0.3s ease;
+    }
+    .custom-red-btn:hover {
+        background-color: #7a0019;
+        border-color: #7a0019;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(144, 0, 29, 0.3);
+    }
+    .custom-red-btn:active {
+        background-color: #6b0014 !important;
+        border-color: #6b0014 !important;
+    }
+
+    /* Đồng bộ tiêu đề với trang Home/Predict */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        padding-bottom: 15px;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 4px;
+        background-color: #2c3e50;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 2.2rem;
+        }
+        .section-title::after {
+            width: 160px;
+        }
+    }
+
+    /* Custom file input - hiển thị tên file */
+    #file-name {
+        font-style: italic;
+    }
+</style>
+
+<script>
+    // Hiển thị tên file khi chọn
+    document.getElementById('file').addEventListener('change', function(e) {
+        var fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
+    });
+</script>
+
 {% endblock %}

@@ -1,153 +1,189 @@
 {% extends "base.html" %}
 {% block title %}Predict{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
-  <div class="row">
-    
-    <!-- Left Section -->
-    <div class="col-lg-5 mb-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title">Model Overview</h2>
-          <p class="card-text">
-            Machine Learning can accurately predict the compressive strength of concrete incorporating recycled plastic aggregates under laboratory conditions.
-            The XGBoost model combined with the ZOA optimization algorithm achieves over 90% accuracy, demonstrating strong capability in predicting the mechanical properties of concrete with complex and nonlinear input variables.
-          </p>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <!-- Card Single Prediction -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="section-title mb-5 text-center mx-auto position-relative d-block">
+                        PREDICT CONCRETE COMPRESSIVE STRENGTH
+                    </h2>
+                    <form method="POST" novalidate>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="cement_dosage">Cement dosage (c_d) (kg)</label>
+                                <input type="number" class="form-control" id="cement_dosage" name="cement_dosage" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="cement_compressive_strength">Cement compressive strength (ce_cs) (MPa)</label>
+                                <input type="number" class="form-control" id="cement_compressive_strength" name="cement_compressive_strength" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="cement_specific_gravity">Cement specific gravity (ce_sg) (g/cm³)</label>
+                                <input type="number" class="form-control" id="cement_specific_gravity" name="cement_specific_gravity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="fine_aggregate_quantity">Fine aggregate quantity (f_q) (kg)</label>
+                                <input type="number" class="form-control" id="fine_aggregate_quantity" name="fine_aggregate_quantity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="fine_aggregate_specific_gravity">Fine aggregate specific gravity (f_sg) (g/cm³)</label>
+                                <input type="number" class="form-control" id="fine_aggregate_specific_gravity" name="fine_aggregate_specific_gravity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="coarse_aggregate_quantity">Coarse aggregate quantity (c_q) (kg)</label>
+                                <input type="number" class="form-control" id="coarse_aggregate_quantity" name="coarse_aggregate_quantity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="coarse_aggregate_specific_gravity">Coarse aggregate specific gravity (ca_sg) (g/cm³)</label>
+                                <input type="number" class="form-control" id="coarse_aggregate_specific_gravity" name="coarse_aggregate_specific_gravity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="water">Water (w) (kg)</label>
+                                <input type="number" class="form-control" id="water" name="water" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="water_cement_ratio">Water/cement ratio (w/c)</label>
+                                <input type="number" class="form-control" id="water_cement_ratio" name="water_cement_ratio" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="plastic_quantity">Plastic quantity (p_q) (kg)</label>
+                                <input type="number" class="form-control" id="plastic_quantity" name="plastic_quantity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="plastic_tensile_strength">Plastic tensile strength (p_ts) (MPa)</label>
+                                <input type="number" class="form-control" id="plastic_tensile_strength" name="plastic_tensile_strength" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="plastic_specific_gravity">Plastic specific gravity (p_sg) (g/cm³)</label>
+                                <input type="number" class="form-control" id="plastic_specific_gravity" name="plastic_specific_gravity" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="slump">Slump (cm)</label>
+                                <input type="number" class="form-control" id="slump" name="slump" step="any" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="concrete_specific_gravity">Concrete specific gravity (c_sg) (kg/m³)</label>
+                                <input type="number" class="form-control" id="concrete_specific_gravity" name="concrete_specific_gravity" step="any" required>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <button type="submit" class="btn px-5 py-3 fw-bold text-white custom-red-btn">PREDICT</button>
+                        </div>
+                        {% if error %}
+                        <div class="alert alert-danger mt-4">{{ error }}</div>
+                        {% endif %}
+                        {% if prediction is not none %}
+                        <div class="alert alert-success mt-4 text-center">
+                            Predicted concrete compressive strength (c_cs): <strong>{{ prediction | round(2) }}</strong> MPa
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+            <!-- Batch Prediction Card -->
+            <div class="card shadow-sm mt-5">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="section-title mb-5 text-center mx-auto position-relative d-block">
+                        BATCH PREDICT FROM CSV
+                    </h2>
+
+                    <form method="POST" action="{{ url_for('predict_csv') }}" enctype="multipart/form-data" novalidate>
+                        <div class="mb-4 text-center">
+                            <!-- Custom file input đẹp, không còn ô mặc định -->
+                            <div class="custom-file-upload d-inline-block">
+                                <input type="file" name="file" id="file" accept=".csv" required style="display: none;">
+                                <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="document.getElementById('file').click();">
+                                    Choose file
+                                </button>
+                                <span class="ms-3 text-muted" id="file-name">No file chosen</span>
+                            </div>
+                            <div class="form-text mt-2">Only .csv files are accepted</div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn px-5 py-3 fw-bold text-white custom-red-btn">UPLOAD & PREDICT CSV</button>
+                        </div>
+                    </form>
+
+                    {% if batch_error %}
+                    <div class="alert alert-danger mt-4">{{ batch_error }}</div>
+                    {% endif %}
+
+                    {% if predictions %}
+                    <div class="mt-5">
+                        <h5 class="text-center mb-4">Batch Predictions</h5>
+                        <div class="table-responsive">
+                            {{ predictions | safe }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <!-- Right Section -->
-    <div class="col-lg-7">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <form method="POST" novalidate>
-            
-            <div class="row g-3">
-              <!-- Cement dosage -->
-              <div class="col-md-6">
-                <label class="form-label" for="cement_dosage">Cement dosage (c_d) (kg):</label>
-                <input type="number" class="form-control" id="cement_dosage" name="cement_dosage" step="any" required>
-              </div>
-
-              <!-- Cement compressive strength -->
-              <div class="col-md-6">
-                <label class="form-label" for="cement_compressive_strength">Cement compressive strength (ce_cs) (MPa):</label>
-                <input type="number" class="form-control" id="cement_compressive_strength" name="cement_compressive_strength" step="any" required>
-              </div>
-
-              <!-- Cement specific gravity -->
-              <div class="col-md-6">
-                <label class="form-label" for="cement_specific_gravity">Cement specific gravity (ce_sg) (g/cm³):</label>
-                <input type="number" class="form-control" id="cement_specific_gravity" name="cement_specific_gravity" step="any" required>
-              </div>
-
-              <!-- Fine aggregate -->
-              <div class="col-md-6">
-                <label class="form-label" for="fine_aggregate_quantity">Fine aggregate quantity (f_q) (kg):</label>
-                <input type="number" class="form-control" id="fine_aggregate_quantity" name="fine_aggregate_quantity" step="any" required>
-              </div>
-
-              <!-- Fine aggregate specific gravity -->
-              <div class="col-md-6">
-                <label class="form-label" for="fine_aggregate_specific_gravity">Fine aggregate specific gravity (f_sg) (g/cm³):</label>
-                <input type="number" class="form-control" id="fine_aggregate_specific_gravity" name="fine_aggregate_specific_gravity" step="any" required>
-              </div>
-
-              <!-- Coarse aggregate -->
-              <div class="col-md-6">
-                <label class="form-label" for="coarse_aggregate_quantity">Coarse aggregate quantity (c_q) (kg):</label>
-                <input type="number" class="form-control" id="coarse_aggregate_quantity" name="coarse_aggregate_quantity" step="any" required>
-              </div>
-
-              <!-- Coarse aggregate specific gravity -->
-              <div class="col-md-6">
-                <label class="form-label" for="coarse_aggregate_specific_gravity">Coarse aggregate specific gravity (ca_sg) (g/cm³):</label>
-                <input type="number" class="form-control" id="coarse_aggregate_specific_gravity" name="coarse_aggregate_specific_gravity" step="any" required>
-              </div>
-
-              <!-- Water -->
-              <div class="col-md-6">
-                <label class="form-label" for="water">Water (w) (kg):</label>
-                <input type="number" class="form-control" id="water" name="water" step="any" required>
-              </div>
-
-              <!-- Water/cement ratio -->
-              <div class="col-md-6">
-                <label class="form-label" for="water_cement_ratio">Water/cement ratio (w/c):</label>
-                <input type="number" class="form-control" id="water_cement_ratio" name="water_cement_ratio" step="any" required>
-              </div>
-
-              <!-- Plastic quantity -->
-              <div class="col-md-6">
-                <label class="form-label" for="plastic_quantity">Plastic quantity (p_q) (kg):</label>
-                <input type="number" class="form-control" id="plastic_quantity" name="plastic_quantity" step="any" required>
-              </div>
-
-              <!-- Plastic tensile strength -->
-              <div class="col-md-6">
-                <label class="form-label" for="plastic_tensile_strength">Plastic tensile strength (p_ts) (MPa):</label>
-                <input type="number" class="form-control" id="plastic_tensile_strength" name="plastic_tensile_strength" step="any" required>
-              </div>
-
-              <!-- Plastic specific gravity -->
-              <div class="col-md-6">
-                <label class="form-label" for="plastic_specific_gravity">Plastic specific gravity (p_sg) (g/cm³):</label>
-                <input type="number" class="form-control" id="plastic_specific_gravity" name="plastic_specific_gravity" step="any" required>
-              </div>
-
-              <!-- Slump -->
-              <div class="col-md-6">
-                <label class="form-label" for="slump">Slump (cm):</label>
-                <input type="number" class="form-control" id="slump" name="slump" step="any" required>
-              </div>
-
-              <!-- Concrete specific gravity -->
-              <div class="col-md-12">
-                <label class="form-label" for="concrete_specific_gravity">Concrete specific gravity (c_sg) (kg/m³):</label>
-                <input type="number" class="form-control" id="concrete_specific_gravity" name="concrete_specific_gravity" step="any" required>
-              </div>
-            </div>
-
-            <div class="mt-4 text-center">
-              <button type="submit" class="btn btn-primary px-4">PREDICT</button>
-            </div>
-
-            {% if error %}
-              <div class="alert alert-danger mt-3">{{ error }}</div>
-            {% endif %}
-
-            {% if prediction is not none %}
-              <div class="alert alert-success mt-3">
-                Predicted Concrete Compressive Strength (c_cs): <strong>{{ prediction | round(2) }}</strong> MPa
-              </div>
-            {% endif %}
-          </form>
-        </div>
-      </div>
-
-      <!-- CSV Upload -->
-      <div class="card shadow-sm mt-4">
-        <div class="card-body">
-          <h4>Or Batch Predict from CSV</h4>
-          <form method="POST" action="{{ url_for('predict_csv') }}" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".csv" class="form-control mb-2" required>
-            <button type="submit" class="btn btn-secondary">UPLOAD & PREDICT CSV</button>
-          </form>
-
-          {% if predictions %}
-            <div class="mt-3">
-              <h5>Batch Predictions:</h5>
-              <div class="table-responsive">
-                {{ predictions | safe }}
-              </div>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
+
+<style>
+    /* Nút màu đỏ chủ đạo #90001d */
+    .custom-red-btn {
+        background-color: #90001d;
+        border-color: #90001d;
+        transition: all 0.3s ease;
+    }
+    .custom-red-btn:hover {
+        background-color: #7a0019;
+        border-color: #7a0019;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(144, 0, 29, 0.3);
+    }
+    .custom-red-btn:active {
+        background-color: #6b0014 !important;
+        border-color: #6b0014 !important;
+    }
+
+    /* Đồng bộ tiêu đề với trang Home */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        padding-bottom: 15px;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 4px;
+        background-color: #2c3e50;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 2.2rem;
+        }
+        .section-title::after {
+            width: 160px;
+        }
+    }
+
+    /* Custom file input - hiển thị tên file */
+    #file-name {
+        font-style: italic;
+    }
+</style>
+
+<script>
+    // Hiển thị tên file khi chọn
+    document.getElementById('file').addEventListener('change', function(e) {
+        var fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
+    });
+</script>
+
 {% endblock %}

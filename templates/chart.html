@@ -1,163 +1,236 @@
 {% extends "base.html" %}
 {% block title %}Prediction Logs{% endblock %}
-
 {% block content %}
-<div class="container mt-4">
-  <div class="card shadow-sm p-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="mb-0">Prediction Logs</h3>
-      <small class="text-muted">Select a log to view</small>
-    </div>
+<style>
+    /* Đồng bộ hoàn toàn gạch chân với trang Home */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        padding-bottom: 15px;
+        position: relative;
+        display: inline-block;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 4px;
+        background-color: #2c3e50;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 2.2rem;
+        }
+        .section-title::after {
+            width: 160px;
+        }
+    }
 
-    <!-- Dropdown chọn log -->
-    <div class="mb-3">
-      <select id="logSelect" class="form-select">
-        <option value="" disabled selected>-- Select a log file --</option>
-        {% for file in logs %}
-        <option value="{{ file }}">{{ file }}</option>
-        {% endfor %}
-      </select>
-    </div>
+    /* Nút đỏ chủ đạo giống hệt trang Predict */
+    .custom-red-btn {
+        background-color: #90001d;
+        border-color: #90001d;
+        transition: all 0.3s ease;
+    }
+    .custom-red-btn:hover {
+        background-color: #7a0019;
+        border-color: #7a0019;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(144, 0, 29, 0.3);
+    }
+    .custom-red-btn:active {
+        background-color: #6b0014 !important;
+        border-color: #6b0014 !important;
+    }
 
-    <!-- Upload area (hiện khi chưa có y_true hoặc để replace) -->
-    <div id="uploadSection" class="mb-3" style="display:none;">
-      <div class="alert alert-info py-2 mb-2" id="uploadMessage">
-        <!-- dynamic message -->
-      </div>
-      <form id="uploadForm" class="d-flex gap-2 align-items-center" enctype="multipart/form-data">
-        <input type="file" name="reality_csv" accept=".csv" class="form-control form-control-sm" required>
-        <button type="submit" class="btn btn-sm btn-primary">Upload y_true CSV</button>
-        <div id="uploadStatus" class="ms-2"></div>
-      </form>
-    </div>
+    /* Custom file input giống hệt phần Batch Predict */
+    #file-name {
+        font-style: italic;
+    }
+</style>
 
-    <!-- Chart area -->
-    <div id="chartWrapper" style="min-height:280px;">
-      <canvas id="predictionChart" style="max-height:520px;"></canvas>
-      <div id="noDataNotice" class="text-muted mt-2" style="display:none;">
-        <em>No actual values (y_true) found. Upload y_true CSV to see Predicted vs Actual scatter plot.</em>
-      </div>
-    </div>
-  </div>
+<div class="container mt-5">
+<div class="row justify-content-center">
+<div class="col-12">
+<div class="card shadow-sm">
+<div class="card-body p-4 p-md-5">
+<div class="text-center mb-3">
+<h2 class="section-title mx-auto">
+    PREDICTION LOGS
+</h2>
+</div>
+<p class="text-center text-dark mb-3">Select a log to view detailed predictions and compare with actual values</p>
+
+<!-- Dropdown chọn log -->
+<div class="mb-4">
+<select id="logSelect" class="form-select form-select-lg">
+<option value="" disabled selected>-- Select a log file --</option>
+{% for file in logs %}
+<option value="{{ file }}">{{ file }}</option>
+{% endfor %}
+</select>
+</div>
+
+<!-- Upload area - giống Batch Predict -->
+<div id="uploadSection" class="mb-5" style="display:none;">
+<div class="alert alert-info py-3 mb-4" id="uploadMessage">
+<!-- dynamic message -->
+</div>
+
+<form id="uploadForm" enctype="multipart/form-data">
+<div class="text-center">
+<!-- Custom file input -->
+<div class="custom-file-upload d-inline-block mb-3">
+<input type="file" name="reality_csv" id="reality_file" accept=".csv" required style="display: none;">
+<button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="document.getElementById('reality_file').click();">
+    Choose file
+</button>
+<span class="ms-3 text-muted" id="file-name">No file chosen</span>
+</div>
+<div class="form-text mt-2 mb-4">Only .csv files are accepted</div>
+
+<button type="submit" class="btn px-5 py-3 fw-bold text-white custom-red-btn">
+    UPLOAD Y_TRUE CSV
+</button>
+</div>
+
+<div id="uploadStatus" class="text-center mt-3"></div>
+</form>
+</div>
+
+<!-- Chart area -->
+<div id="chartWrapper" style="min-height:420px;">
+<canvas id="predictionChart" style="max-height:600px;"></canvas>
+<div id="noDataNotice" class="text-center mt-4" style="display:none;">
+<em class="text-muted">No actual values (y_true) found. Upload y_true CSV to see Predicted vs Actual scatter plot.</em>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
+// Hiển thị tên file khi chọn
+document.getElementById('reality_file').addEventListener('change', function(e) {
+    var fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
+    document.getElementById('file-name').textContent = fileName;
+});
+
+// Script xử lý chart và upload (giữ nguyên)
 (function(){
-  const logSelect = document.getElementById('logSelect');
-  const uploadSection = document.getElementById('uploadSection');
-  const uploadForm = document.getElementById('uploadForm');
-  const uploadMessage = document.getElementById('uploadMessage');
-  const uploadStatus = document.getElementById('uploadStatus');
-  const chartCanvas = document.getElementById('predictionChart');
-  const noDataNotice = document.getElementById('noDataNotice');
+const logSelect = document.getElementById('logSelect');
+const uploadSection = document.getElementById('uploadSection');
+const uploadForm = document.getElementById('uploadForm');
+const uploadMessage = document.getElementById('uploadMessage');
+const uploadStatus = document.getElementById('uploadStatus');
+const chartCanvas = document.getElementById('predictionChart');
+const noDataNotice = document.getElementById('noDataNotice');
+let currentFile = null;
+let predChart = null;
 
-  let currentFile = null;
-  let predChart = null;
-
-  function safeEncode(s){
+function safeEncode(s){
     return encodeURIComponent(s).replace(/%20/g, '+');
-  }
+}
 
-  async function fetchChartData(filename){
+async function fetchChartData(filename){
     try {
-      const resp = await fetch(`/chart_data/${safeEncode(filename)}`);
-      if (!resp.ok) {
-        const txt = await resp.text();
-        throw new Error(`Server returned ${resp.status}: ${txt}`);
-      }
-      const data = await resp.json();
-      return data;
+        const resp = await fetch(`/chart_data/${safeEncode(filename)}`);
+        if (!resp.ok) {
+            const txt = await resp.text();
+            throw new Error(`Server returned ${resp.status}: ${txt}`);
+        }
+        const data = await resp.json();
+        return data;
     } catch (err) {
-      console.error('fetchChartData error', err);
-      throw err;
+        console.error('fetchChartData error', err);
+        throw err;
     }
-  }
+}
 
-  function hasYTrue(data){
+function hasYTrue(data){
     if (!Array.isArray(data) || data.length === 0) return false;
-    // check if any row has a non-null, non-empty y_true
     return data.some(r => r.y_true !== undefined && r.y_true !== null && String(r.y_true).trim() !== '');
-  }
+}
 
-  function clearChart(){
+function clearChart(){
     if (predChart) {
-      try { predChart.destroy(); } catch(e) {}
-      predChart = null;
+        try { predChart.destroy(); } catch(e) {}
+        predChart = null;
     }
-  }
+}
 
-  function renderScatter(predicted, actual){
+function renderScatter(predicted, actual){
     clearChart();
-
-    // compute min/max across both arrays
     const all = predicted.concat(actual.filter(v => v !== null && v !== undefined));
     const numeric = all.filter(v => typeof v === 'number' && !isNaN(v));
     const minVal = numeric.length ? Math.min(...numeric) : 0;
     const maxVal = numeric.length ? Math.max(...numeric) : 1;
-
     const scatterPoints = predicted.map((x, i) => ({ x: x, y: actual[i] }));
-
     const ctx = chartCanvas.getContext('2d');
     predChart = new Chart(ctx, {
-      type: 'scatter',
-      data: {
-        datasets: [
-          {
-            label: 'Predicted vs Actual',
-            data: scatterPoints,
-            backgroundColor: 'rgba(0,123,255,0.85)',
-            pointRadius: 5,
-            showLine: false
-          },
-          {
-            label: 'y = x',
-            type: 'line',
-            data: [
-              { x: minVal, y: minVal },
-              { x: maxVal, y: maxVal }
-            ],
-            borderColor: 'rgba(220,53,69,0.9)', // bootstrap danger
-            borderWidth: 1,
-            pointRadius: 0,
-            fill: false,
-            borderDash: [6,4]
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'top' },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                // context.raw is {x, y}
-                const r = context.raw || {};
-                return `Predicted: ${r.x} , Actual: ${r.y}`;
-              }
-            }
-          }
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'Predicted vs Actual',
+                    data: scatterPoints,
+                    backgroundColor: 'rgba(0,123,255,0.85)',
+                    pointRadius: 6,
+                    showLine: false
+                },
+                {
+                    label: 'y = x',
+                    type: 'line',
+                    data: [
+                        { x: minVal, y: minVal },
+                        { x: maxVal, y: maxVal }
+                    ],
+                    borderColor: 'rgba(220,53,69,0.9)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                    borderDash: [8,5]
+                }
+            ]
         },
-        scales: {
-          x: {
-            title: { display: true, text: 'Predicted (Predicted_c_cs)' }
-          },
-          y: {
-            title: { display: true, text: 'Actual (y_true)' }
-          }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const r = context.raw || {};
+                            return `Predicted: ${r.x.toFixed(2)} MPa | Actual: ${r.y !== null ? r.y.toFixed(2) : 'N/A'} MPa`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Predicted Compressive Strength (MPa)' }
+                },
+                y: {
+                    title: { display: true, text: 'Actual Compressive Strength (MPa)' }
+                }
+            }
         }
-      }
     });
-  }
+}
 
-  async function onSelectChange(){
+async function onSelectChange(){
     const filename = logSelect.value;
     if (!filename) return;
-
     currentFile = filename;
     uploadStatus.textContent = '';
     uploadSection.style.display = 'none';
@@ -165,99 +238,78 @@
     clearChart();
 
     try {
-      const data = await fetchChartData(filename);
+        const data = await fetchChartData(filename);
+        if (!Array.isArray(data) || data.length === 0) {
+            uploadMessage.textContent = 'Log is empty.';
+            uploadSection.style.display = 'block';
+            noDataNotice.style.display = 'block';
+            return;
+        }
 
-      if (!Array.isArray(data) || data.length === 0) {
-        uploadMessage.textContent = 'Log is empty.';
+        if (!hasYTrue(data)) {
+            uploadMessage.textContent = 'No actual (y_true) values found for this log. Upload y_true CSV to see the Predicted vs Actual scatter plot.';
+            uploadSection.style.display = 'block';
+            noDataNotice.style.display = 'block';
+            return;
+        }
+
+        const predicted = data.map(r => {
+            const v = Number(r.Predicted_c_cs);
+            return isNaN(v) ? null : v;
+        });
+        const actual = data.map(r => {
+            const v = Number(r.y_true);
+            return isNaN(v) ? null : v;
+        });
+
+        uploadMessage.textContent = 'Actual values loaded. You may upload a new y_true CSV to replace.';
         uploadSection.style.display = 'block';
-        noDataNotice.style.display = 'block';
-        noDataNotice.textContent = 'Log file is empty.';
-        return;
-      }
-
-      if (!hasYTrue(data)) {
-        // show upload form & message
-        uploadMessage.textContent = 'No actual (y_true) values found for this log. Upload y_true CSV to see the Predicted vs Actual scatter plot.';
-        uploadSection.style.display = 'block';
-        noDataNotice.style.display = 'block';
-        noDataNotice.textContent = 'No actual values (y_true) found. Upload y_true CSV to see chart.';
-        return;
-      }
-
-      // has y_true -> prepare arrays and render scatter
-      const predicted = data.map(r => {
-        const v = Number(r.Predicted_c_cs);
-        return isNaN(v) ? null : v;
-      });
-      const actual = data.map(r => {
-        const v = Number(r.y_true);
-        return isNaN(v) ? null : v;
-      });
-
-      // hide upload message but still allow replace: show uploadSection (replace)
-      uploadMessage.textContent = 'Actual values found. You may upload another y_true CSV to replace.';
-      uploadSection.style.display = 'block';
-      noDataNotice.style.display = 'none';
-
-      renderScatter(predicted, actual);
-
+        noDataNotice.style.display = 'none';
+        renderScatter(predicted, actual);
     } catch (err) {
-      uploadMessage.textContent = 'Error loading log. See console.';
-      uploadSection.style.display = 'block';
-      noDataNotice.style.display = 'block';
-      noDataNotice.textContent = 'Error loading chart data.';
+        uploadMessage.textContent = 'Error loading log data. Please try again.';
+        uploadSection.style.display = 'block';
+        noDataNotice.style.display = 'block';
     }
-  }
+}
 
-  // handle upload form submit
-  uploadForm.addEventListener('submit', async function(e){
+uploadForm.addEventListener('submit', async function(e){
     e.preventDefault();
     if (!currentFile) {
-      alert('Please select a log file first.');
-      return;
+        alert('Please select a log file first.');
+        return;
     }
     const input = uploadForm.querySelector('input[type="file"]');
     if (!input.files || input.files.length === 0) {
-      alert('Please choose a CSV file to upload.');
-      return;
+        alert('Please choose a CSV file.');
+        return;
     }
-
     const file = input.files[0];
     const formData = new FormData();
     formData.append('reality_csv', file);
-
     const uploadUrl = `/upload_reality/${safeEncode(currentFile)}`;
 
-    // UI feedback
     uploadStatus.innerHTML = '<span class="text-muted">Uploading...</span>';
     uploadForm.querySelector('button[type="submit"]').disabled = true;
 
     try {
-      const resp = await fetch(uploadUrl, { method: 'POST', body: formData });
-      const result = await resp.json();
-      if (!resp.ok || !result.success) {
-        const errMsg = result.error || `Upload failed (status ${resp.status})`;
-        uploadStatus.innerHTML = `<span class="text-danger">${errMsg}</span>`;
-        console.error('Upload error', result);
-      } else {
-        uploadStatus.innerHTML = `<span class="text-success">Upload successful. Rendering chart...</span>`;
-        // refresh and render chart automatically
-        await onSelectChange();
-      }
+        const resp = await fetch(uploadUrl, { method: 'POST', body: formData });
+        const result = await resp.json();
+        if (!resp.ok || !result.success) {
+            const errMsg = result.error || `Upload failed (${resp.status})`;
+            uploadStatus.innerHTML = `<span class="text-danger">${errMsg}</span>`;
+        } else {
+            uploadStatus.innerHTML = `<span class="text-success">Upload successful! Refreshing chart...</span>`;
+            await onSelectChange();
+        }
     } catch (err) {
-      console.error('Upload exception', err);
-      uploadStatus.innerHTML = `<span class="text-danger">Upload error</span>`;
+        uploadStatus.innerHTML = '<span class="text-danger">Upload error</span>';
     } finally {
-      uploadForm.querySelector('button[type="submit"]').disabled = false;
+        uploadForm.querySelector('button[type="submit"]').disabled = false;
     }
-  });
+});
 
-  // trigger when user selects a log
-  logSelect.addEventListener('change', onSelectChange);
-
-  // initial: hide everything until selected
-  uploadSection.style.display = 'none';
-  noDataNotice.style.display = 'none';
+logSelect.addEventListener('change', onSelectChange);
 })();
 </script>
 {% endblock %}

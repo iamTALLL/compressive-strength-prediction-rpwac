@@ -1,117 +1,193 @@
 {% extends "base.html" %}
-
 {% block title %}Inverse Design{% endblock %}
-
 {% block content %}
-<div class="container mt-4">
-    <h1 class="text-center section-title mb-4">🧪 Inverse Design: Tối Ưu Hóa Công Thức Bê Tông</h1>
-    <p class="text-center text-muted">Sử dụng thuật toán FOX (một biến thể của GA) để tìm ra công thức vật liệu tối ưu, đáp ứng cường độ nén mục tiêu (Target CS) trong khi tối thiểu hóa xi măng và tối đa hóa nhựa tái chế.</p>
+<style>
+    /* Đảm bảo tất cả chữ (trừ tiêu đề chính) có cùng cỡ chữ và không in đậm */
+    #optimization-content p,
+    #optimization-content label,
+    #optimization-content small,
+    #optimization-content h4,
+    #optimization-content h5,
+    #optimization-content th,
+    #optimization-content td,
+    #optimization-content strong,
+    #optimization-content .alert {
+        font-size: 1rem !important;
+        font-weight: normal !important;
+        color: #000 !important;
+    }
+    /* Loại bỏ in đậm từ Bootstrap form labels và các phần khác */
+    #optimization-content .form-label,
+    #optimization-content .font-weight-bold {
+        font-weight: normal !important;
+    }
+    /* Đổi màu nền thành #90001d */
+    #optimization-content .card-header.custom-red-header {
+        background-color: #90001d !important;
+    }
+    #optimization-content .card-header.custom-red-header h5 {
+        color: white !important;
+        font-weight: normal !important;
+    }
 
-    {% if error %}
-    <div class="alert alert-danger" role="alert">
-        <strong>Lỗi / Cảnh báo:</strong> {{ error }}
-    </div>
-    {% endif %}
-    
-    {% if not optimize_enabled %}
-    <div class="alert alert-warning" role="alert">
-        <strong>Cảnh báo:</strong> Tính năng Inverse Design (Tối ưu hóa) đã bị vô hiệu hóa do không tìm thấy thư viện <code>mealpy</code>. Vui lòng kiểm tra cài đặt.
-    </div>
-    {% endif %}
+    /* Thêm padding 1cm cho nội dung card */
+    #optimization-content .card-body {
+        padding: 38px !important;
+    }
 
-    {% if optimize_enabled %}
-    <div class="card shadow-sm mb-5">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Tham Số Tối Ưu Hóa</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST">
-                
-                <div class="row mb-4 border-bottom pb-3">
-                    <div class="col-md-12">
-                        <h4>1. Target Compressive Strength (Mục tiêu Cường độ Nén)</h4>
-                        <div class="form-group">
-                            <label for="target_cs" class="font-weight-bold">Target CS (MPa):</label>
-                            <input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required 
-                                   value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
-                                   placeholder="Ví dụ: 45.0">
-                            <small class="form-text text-muted">Giá trị mục tiêu cho cường độ nén (10 - 90 MPa).</small>
-                        </div>
-                    </div>
-                </div>
+    /* Định dạng nút Run Optimization */
+    #optimization-content .custom-red-btn {
+        background-color: #90001d !important;
+        border-color: #90001d !important;
+        color: white !important;
+        font-weight: normal !important;
+        padding: 12px 40px !important;
+        font-size: 1.1rem !important;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    #optimization-content .custom-red-btn:hover {
+        background-color: #7a0019 !important;
+        border-color: #7a0019 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(144, 0, 29, 0.3);
+    }
+    #optimization-content .custom-red-btn:active {
+        background-color: #6b0014 !important;
+        border-color: #6b0014 !important;
+    }
 
-                <h4>2. Fixed Components (Ràng buộc cố định)</h4>
-                <p class="text-muted">Nhập giá trị (kg/m³) cho các thành phần bạn muốn giữ cố định. Để trống hoặc nhập **0** để thuật toán FOX tối ưu hóa giá trị đó.</p>
-                
-                <div class="row">
-                    {% for feat in all_features %}
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="form-group">
-                            <label for="{{ feat }}" class="small text-muted">{{ name_map[feat] }} ({{ feat }}):</label>
-                            <input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control form-control-sm" 
-                                   placeholder="0 (Optimize)">
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+    /* Định dạng đặc biệt cho 2 tiêu đề phần */
+    #optimization-content .section-subtitle {
+        font-weight: bold !important;
+        color: #2c3e50 !important;
+        text-transform: uppercase;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        margin-bottom: 20px;
+    }
 
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-magic"></i> Run Optimization
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    {% endif %}
+    /* In nghiêng 2 dòng mô tả */
+    #optimization-content .italic-description {
+        font-style: italic;
+    }
 
+    /* Thu nhỏ khoảng cách giữa tiêu đề chính và đoạn mô tả */
+    #optimization-content .section-title {
+        margin-bottom: 20px !important; /* Giảm từ mb-5 (~48px) xuống còn khoảng 20px */
+    }
 
-    {% if predicted_cs %}
-    <div class="card shadow-lg mb-5 border-success">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="fas fa-check-circle"></i> Kết Quả Công Thức Tối Ưu</h5>
-        </div>
-        <div class="card-body">
-            <div class="row text-center mb-4">
-                <div class="col-md-6 border-right">
-                    <p class="mb-1 text-muted">Target Compressive Strength</p>
-                    <h2 class="display-4 text-primary">{{ target_cs }} MPa</h2>
-                </div>
-                <div class="col-md-6">
-                    <p class="mb-1 text-muted">Predicted CS (Optimized Mix)</p>
-                    <h2 class="display-4 text-success">{{ predicted_cs }} MPa</h2>
-                </div>
-            </div>
-            
-            <h5 class="mt-4 border-top pt-3">Chi Tiết Thành Phần Tối Ưu (kg/m³)</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover results-table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Thành Phần</th>
-                            <th>Tên viết tắt</th>
-                            <th>Giá Trị Tối Ưu (kg/m³)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for name, value in optimized_list %}
-                        <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ all_features[loop.index0] }}</td>
-                            <td><strong>{{ value }}</strong></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="alert alert-info small mt-3">
-                <i class="fas fa-info-circle"></i> 
-                Mục tiêu của thuật toán là tìm công thức có tổng thể tích xấp xỉ 1 m³, tối thiểu hóa Xi măng ({{ L1 }} * c_d), và tối đa hóa Nhựa ({{ L2 }} * p_q), trong khi cường độ nén gần với Target CS nhất.
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    /* Thu nhỏ khoảng cách giữa đoạn mô tả và card đầu tiên */
+    #optimization-content .intro-description {
+        margin-bottom: 30px !important; /* Giảm từ 60px xuống 30px để gần hơn một chút */
+    }
+</style>
 
+<div class="container mt-5" id="optimization-content">
+<div class="row justify-content-center">
+<div class="col-12">
+<h1 class="section-title mb-5 text-center mx-auto position-relative d-block">
+    INVERSE DESIGN OPTIMIZE CONCRETE MIX PROPORTIONS
+</h1>
+<p class="text-center text-dark intro-description">Utilizes the FOX algorithm (a variant of Genetic Algorithm) to determine the optimal material mix that meets the target compressive strength (Target CS) while minimizing cement usage and maximizing recycled plastic content.</p>
+{% if error %}
+<div class="alert alert-danger" role="alert">
+Error / Warning {{ error }}
+</div>
+{% endif %}
+{% if not optimize_enabled %}
+<div class="alert alert-warning" role="alert">
+Warning The Inverse Design (Optimization) feature has been disabled because the mealpy library was not found. Please check your installation.
+</div>
+{% endif %}
+{% if optimize_enabled %}
+<div class="card shadow-sm mb-5">
+<div class="card-header custom-red-header">
+<h5 class="mb-0">OPTIMIZATION PARAMETERS</h5>
+</div>
+<div class="card-body">
+<form method="POST">
+<div class="row mb-4 border-bottom pb-3">
+<div class="col-md-12">
+<h4 class="section-subtitle">1. TARGET COMPRESSIVE STRENGTH</h4>
+<div class="form-group">
+<label for="target_cs">Target CS (MPa)</label>
+<input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required
+value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
+placeholder="Example 45.0">
+<small class="form-text italic-description">Target value for compressive strength (10 - 90 MPa).</small>
+</div>
+</div>
+</div>
+<h4 class="section-subtitle">2. FIXED COMPONENTS</h4>
+<p class="italic-description">Enter values (kg/m³) for any components you wish to keep fixed. Leave blank or enter 0 to allow the FOX algorithm to optimize that component.</p>
+<div class="row">
+{% for feat in all_features %}
+<div class="col-md-4 col-sm-6 mb-3">
+<div class="form-group">
+<label for="{{ feat }}">{{ name_map[feat] }} ({{ feat }})</label>
+<input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control"
+placeholder="0 (Optimize)">
+</div>
+</div>
+{% if loop.index is divisibleby 3 %}</div><div class="row">{% endif %}
+{% endfor %}
+</div>
+<div class="text-center mt-4">
+<button type="submit" class="custom-red-btn btn btn-lg">
+<i class="fas fa-magic"></i> RUN OPTIMIZATION
+</button>
+</div>
+</form>
+</div>
+</div>
+{% endif %}
+{% if predicted_cs %}
+<div class="card shadow-lg mb-5 border-success">
+<div class="card-header bg-success text-white">
+<h5 class="mb-0"><i class="fas fa-check-circle"></i> Optimized Mix Results</h5>
+</div>
+<div class="card-body">
+<div class="row text-center mb-4">
+<div class="col-md-6 border-right">
+<p class="mb-1">Target Compressive Strength</p>
+<h2 class="display-4">{{ target_cs }} MPa</h2>
+</div>
+<div class="col-md-6">
+<p class="mb-1">Predicted CS (Optimized Mix)</p>
+<h2 class="display-4">{{ predicted_cs }} MPa</h2>
+</div>
+</div>
+<h5 class="mt-4 border-top pt-3">Optimized Component Details (kg/m³)</h5>
+<div class="table-responsive">
+<table class="table table-bordered table-hover results-table">
+<thead class="thead-light">
+<tr>
+<th>Component</th>
+<th>Abbreviation</th>
+<th>Optimized Value (kg/m³)</th>
+</tr>
+</thead>
+<tbody>
+{% for name, value in optimized_list %}
+<tr>
+<td>{{ name }}</td>
+<td>{{ all_features[loop.index0] }}</td>
+<td>{{ value }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<div class="alert alert-info mt-3">
+<i class="fas fa-info-circle"></i>
+The algorithm aims to find a mix with a total volume approximately 1 m³, minimizing cement ({{ L1 }} × c_d) and maximizing recycled plastic ({{ L2 }} × p_q), while achieving a compressive strength as close as possible to the Target CS.
+</div>
+</div>
+</div>
+{% endif %}
+</div>
+</div>
 </div>
 {% endblock %}
