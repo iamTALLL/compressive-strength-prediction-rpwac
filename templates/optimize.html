@@ -93,71 +93,72 @@
 <p class="text-center text-dark intro-description">Utilizes the FOX algorithm (a variant of Genetic Algorithm) to determine the optimal material mix that meets the target compressive strength (Target CS) while minimizing cement usage and maximizing recycled plastic content.</p>
 {% if error %}
 <div class="alert alert-danger" role="alert">
-Error / Warning {{ error }}
+    Error / Warning {{ error }}
 </div>
 {% endif %}
 {% if not optimize_enabled %}
 <div class="alert alert-warning" role="alert">
-Warning The Inverse Design (Optimization) feature has been disabled because the mealpy library was not found. Please check your installation.
+    Warning The Inverse Design (Optimization) feature has been disabled because the mealpy library was not found. Please check your installation.
 </div>
 {% endif %}
 {% if optimize_enabled %}
 <div class="card shadow-sm mb-5">
-<div class="card-header custom-red-header">
-<h5 class="mb-0">OPTIMIZATION PARAMETERS</h5>
-</div>
-<div class="card-body">
-<form method="POST">
-<div class="row mb-4 border-bottom pb-3">
-<div class="col-md-12">
-<h4 class="section-subtitle">1. TARGET COMPRESSIVE STRENGTH</h4>
-<div class="form-group">
-<label for="target_cs">Target CS (MPa)</label>
-<input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required
-value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
-placeholder="Example 45.0">
-<small class="form-text italic-description">Target value for compressive strength (10 - 90 MPa).</small>
-</div>
-</div>
-</div>
-<h4 class="section-subtitle">2. FIXED COMPONENTS</h4>
-<p class="italic-description">Enter values (kg/m³) for any components you wish to keep fixed. Leave blank or enter 0 to allow the FOX algorithm to optimize that component.</p>
-<div class="row">
-{% for feat in all_features %}
-<div class="col-md-4 col-sm-6 mb-3">
-<div class="form-group">
-<label for="{{ feat }}">{{ name_map[feat] }} ({{ feat }})</label>
-<input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control"
-placeholder="0 (Optimize)">
-</div>
-</div>
-{% if loop.index is divisibleby 3 %}</div><div class="row">{% endif %}
-{% endfor %}
-</div>
-<div class="text-center mt-4">
-<button type="submit" class="custom-red-btn btn btn-lg">
-<i class="fas fa-magic"></i> RUN OPTIMIZATION
-</button>
-</div>
-</form>
-</div>
+    <div class="card-header custom-red-header">
+        <h5 class="mb-0">OPTIMIZATION PARAMETERS</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" id="optimize-form">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-md-12">
+                    <h4 class="section-subtitle">1. TARGET COMPRESSIVE STRENGTH</h4>
+                    <div class="form-group">
+                        <label for="target_cs">Target CS (MPa)</label>
+                        <input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required
+                        value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
+                        placeholder="Example 45.0">
+                        <small class="form-text italic-description">Target value for compressive strength (10 - 90 MPa).</small>
+                    </div>
+                </div>
+            </div>
+            <h4 class="section-subtitle">2. FIXED COMPONENTS</h4>
+            <p class="italic-description">Enter values (kg/m³) for any components you wish to keep fixed. Leave blank or enter 0 to allow the FOX algorithm to optimize that component.</p>
+            <div class="row">
+                {% for feat in all_features %}
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="form-group">
+                        <label for="{{ feat }}">{{ name_map[feat] }} ({{ feat }})</label>
+                        <input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control"
+                        placeholder="0 (Optimize)"
+                        value="{{ request.form.get(feat, '') }}">
+                    </div>
+                </div>
+                {% if loop.index is divisibleby 3 %}</div><div class="row">{% endif %}
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="custom-red-btn btn btn-lg" onclick="this.innerHTML='<i class=\'fas fa-spinner fa-spin\'></i> OPTIMIZING...';">
+                    <i class="fas fa-magic"></i> RUN OPTIMIZATION
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endif %}
 {% if predicted_cs %}
 <div class="card shadow-lg mb-5 border-success">
 <div class="card-header bg-success text-white">
-<h5 class="mb-0"><i class="fas fa-check-circle"></i> Optimized Mix Results</h5>
+    <h5 class="mb-0"><i class="fas fa-check-circle"></i> Optimized Mix Results</h5>
 </div>
 <div class="card-body">
 <div class="row text-center mb-4">
-<div class="col-md-6 border-right">
-<p class="mb-1">Target Compressive Strength</p>
-<h2 class="display-4">{{ target_cs }} MPa</h2>
-</div>
-<div class="col-md-6">
-<p class="mb-1">Predicted CS (Optimized Mix)</p>
-<h2 class="display-4">{{ predicted_cs }} MPa</h2>
-</div>
+    <div class="col-md-6 border-right">
+        <p class="mb-1">Target Compressive Strength</p>
+        <h2 class="display-4">{{ target_cs }} MPa</h2>
+    </div>
+    <div class="col-md-6">
+        <p class="mb-1">Predicted CS (Optimized Mix)</p>
+        <h2 class="display-4">{{ predicted_cs }} MPa</h2>
+    </div>
 </div>
 <h5 class="mt-4 border-top pt-3">Optimized Component Details (kg/m³)</h5>
 <div class="table-responsive">

@@ -418,19 +418,19 @@ def inverse_design():
                 'optimized_list': optimized_list
             })
             
-            return render_template('optimize.html', **template_vars)
+            return render_template('optimize.html', form_data=request.form, **template_vars)
 
         except ValueError:
             error = "Please enter valid numbers for Target CS and all fixed fields."
             app.logger.error("Input parsing failed (ValueError) in /optimize.", exc_info=True)
-            return render_template('optimize.html', error=error, **template_vars)
+            return render_template('optimize.html', error=error, form_data=request.form, **template_vars)
         except Exception as e:
             error = f"An unexpected error occurred during optimization: {str(e)}"
             app.logger.critical(f"Critical optimization error: {e}", exc_info=True)
-            return render_template('optimize.html', error=error, **template_vars)
+            return render_template('optimize.html', error=error, form_data=request.form, **template_vars)
     
     # Xử lý GET request cho /optimize
-    return render_template('optimize.html', **template_vars)
+    return render_template('optimize.html', form_data=request.form, **template_vars)
 
 
 @app.route('/chart', methods=['GET'])
@@ -481,6 +481,10 @@ def upload_reality(log_file):
     app.logger.info(f"Reality data uploaded and saved for log file: {log_file}")
     return jsonify({'success': True})
 
+@app.context_processor
+def inject_optimize_status():
+    """Tự động truyền trạng thái optimize vào mọi template mà không cần viết lại."""
+    return dict(optimize_enabled=OPTIMIZE_ENABLED)
 
 if __name__ == '__main__':
     app.logger.info(f"Starting server on port {PORT}...")
