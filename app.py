@@ -6,45 +6,46 @@ import os
 import pandas as pd
 import datetime
 import logging
+import warnings
+warnings.filterwarnings('ignore')
 from logging.handlers import RotatingFileHandler
 
 try:
-    from mealpy.evolutionary_based.GA import BaseGA 
-    from mealpy.swarm_based.FOX import OriginalFOX # Import lớp giải thuật chính xác    
-    from mealpy.utils.problem import Problem
+    from mealpy.swarm_based.FOX import OriginalFOX
     from mealpy.utils.space import FloatVar
 except ImportError:
     print("WARNING: mealpy not found. Inverse Design feature will be disabled.")
-    # Cung cấp một biến cờ để vô hiệu hóa tính năng nếu không có mealpy
     OPTIMIZE_ENABLED = False
 else:
     OPTIMIZE_ENABLED = True
 
-# --- CONFIGURATION ---
+# ============================================================
+# CONFIGURATION
+# ============================================================
 LOG_DIR = 'logs'
-PORT = 5004 # Sử dụng cổng mặc định của ứng dụng
+PORT    = 5004
 
-# Thiết lập Logging chuẩn Python (Ghi log hệ thống)
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
 handler = RotatingFileHandler(
-    os.path.join(LOG_DIR, 'app_system.log'), 
-    maxBytes=100000, 
+    os.path.join(LOG_DIR, 'app_system.log'),
+    maxBytes=100000,
     backupCount=3
 )
 handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s')
-handler.setFormatter(formatter)
+handler.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
 
 app = Flask(__name__, template_folder='templates')
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
-
-# Load scaler and model from notebook directory
+# ============================================================
+# MODEL & SCALER LOADING
+# ============================================================
 scaler = None
-model = None
+model  = None
+
 MODEL_FEATURES = [
     'cement_dosage', 'cement_compressive_strength', 'cement_specific_gravity',
     'fine_aggregate_quantity', 'fine_aggregate_specific_gravity',
@@ -56,206 +57,264 @@ MODEL_FEATURES = [
 
 try:
     scaler = joblib.load('scaler.pkl')
-    model = joblib.load('xgb_woa_best_model.pkl')
+    model  = joblib.load('xgb_woa_best_model.pkl')
     app.logger.info("Model and scaler loaded successfully.")
 
-    # ==== 2. Feature list (Lấy từ mô hình hoặc mặc định) ====
     try:
-        # Nếu mô hình có feature_names_in_ (như XGBoost)
-        all_features = model.feature_names_in_.tolist() 
+        all_features = model.feature_names_in_.tolist()
     except AttributeError:
-        # Danh sách 14 features (Đã chuẩn hóa tên trong mã Gradio)
         all_features = [
-            "c_d", "ce_cs", "ce_sg", "f_q", "f_sg", "c_q", "ca_sg", 
-            "w", "w/c", "p_q", "p_ts", "p_sg", "slump", "c_sg"
+            "c_d", "ce_cs", "ce_sg", "f_q", "f_sg", "c_q", "c_sg",
+            "w", "w/c", "p_q", "p_ts", "p_sg", "slump", "c_sg1"
         ]
 
-    # Danh sách tên đầy đủ
     full_names = [
         'Cement dosage', 'Cement compressive strength', 'Cement specific gravity',
         'Fine aggregate quantity', 'Fine aggregate specific gravity',
-        'Coarse aggregate quantity', 'Corse aggregate specific gravity',
+        'Coarse aggregate quantity', 'Coarse aggregate specific gravity',
         'Water', 'Water/cement', 'Plastic quantity',
         'Plastic tensile strength', 'Plastic specific gravity',
         'Slump', 'Concrete specific gravity'
     ]
     name_map = dict(zip(all_features, full_names))
 
-    # ==== 3. Sinh feature bounds từ scaler ====
     if hasattr(scaler, "data_min_") and hasattr(scaler, "data_max_"):
-        # Trường hợp MinMaxScaler
         feature_bounds = {
             feat: (float(scaler.data_min_[i]), float(scaler.data_max_[i]))
             for i, feat in enumerate(all_features)
         }
     elif hasattr(scaler, "mean_") and hasattr(scaler, "scale_"):
-        # Trường hợp StandardScaler: dùng mean ± 3*std làm bounds
         feature_bounds = {
-            feat: (float(scaler.mean_[i] - 3*scaler.scale_[i]),
-                   float(scaler.mean_[i] + 3*scaler.scale_[i]))
+            feat: (float(scaler.mean_[i] - 3 * scaler.scale_[i]),
+                   float(scaler.mean_[i] + 3 * scaler.scale_[i]))
             for i, feat in enumerate(all_features)
         }
     else:
-        raise ValueError("Scaler is not supported. Please use MinMaxScaler or StandardScaler.")
-    app.logger.info("Feature bounds created.")
+        raise ValueError("Unsupported scaler type. Use MinMaxScaler or StandardScaler.")
+
+    app.logger.info("Feature bounds created successfully.")
 
 except FileNotFoundError as e:
-    app.logger.critical(f"Error: Model or scaler file not found: {e}. Exiting.", exc_info=True)
+    app.logger.critical(f"Model/scaler file not found: {e}")
     sys.exit(1)
 except Exception as e:
-    app.logger.critical(f"FATAL ERROR during model loading or initialization: {e}", exc_info=True)
+    app.logger.critical(f"FATAL ERROR during initialization: {e}")
     sys.exit(1)
 
+
+# ============================================================
+# HELPER — dùng DataFrame để tránh warning feature names
+# ============================================================
+def predict_cs(full_vector):
+    """Predict CS từ full_vector (list 14 giá trị), trả về float."""
+    df_input = pd.DataFrame([full_vector], columns=all_features)
+    scaled   = scaler.transform(df_input)
+    return float(model.predict(scaled)[0])
+
+
+# ============================================================
+# OPTIMIZATION CONFIG
+# ============================================================
 if OPTIMIZE_ENABLED:
-    PENALTY_FACTOR = 50000 
-    V_PLASTIC_ABSOLUTE_MAX = 0.20
-    V_MIN_TARGET = 0.95
-    V_MAX_TARGET = 1.05
-    L1 = 0.005 # Tối thiểu Xi măng
-    L2 = 0.0025 # Tối đa Nhựa
+    PENALTY_FACTOR         = 5     # Giảm mạnh xuống 5
+    V_MIN_TARGET           = 0.90
+    V_MAX_TARGET           = 1.10
+    L1                     = 0.005
+    L2                     = 0.0025
+    MAX_RETRIES            = 3
+    EPOCH_BASE             = 200
+    EPOCH_RETRY            = 400
+    POP_SIZE               = 60
 
     def optimize_materials(target_CS, **fixed_features):
-        """Hàm tối ưu hóa thành phần vật liệu sử dụng thuật toán FOX (BaseGA)."""
-        
-        fixed_idx = [all_features.index(k) for k in fixed_features.keys()]
+        fixed_idx    = [all_features.index(k) for k in fixed_features.keys()]
         fixed_values = [float(v) for v in fixed_features.values()]
-        free_idx = [i for i in range(len(all_features)) if i not in fixed_idx]
+        free_idx     = [i for i in range(len(all_features)) if i not in fixed_idx]
 
         if not free_idx:
-            # Nếu tất cả các biến đã được cố định (không có biến tự do)
             return {
-                "Error": "All 14 components are fixed. No optimization is possible. Please unfix at least one component.",
+                "Error": "All 14 components are fixed. Please unfix at least one.",
                 "Predicted_CS": None
             }
 
         lb = [feature_bounds[all_features[i]][0] for i in free_idx]
         ub = [feature_bounds[all_features[i]][1] for i in free_idx]
-        variables = [FloatVar(lb=lb[i], ub=ub[i]) for i in range(len(free_idx))]
 
-        class MyProblem(Problem):
-            def __init__(self):
-                super().__init__(
-                    obj_func=self.fitness,
-                    n_dim=len(free_idx),
-                    bounds=variables
-                )
+        # ── Fitness function ────────────────────────────────────
+        def fitness_func(x):
+            # Khôi phục full vector 14 chiều
+            full_vector = [0.0] * len(all_features)
+            for i, idx in enumerate(fixed_idx):
+                full_vector[idx] = fixed_values[i]
+            for i, idx in enumerate(free_idx):
+                full_vector[idx] = x[i]
 
-            def fitness(self, candidate):
-                # 1. Khôi phục vector đầu vào đầy đủ (14 chiều)
-                full_vector = [0]*len(all_features)
+            fm = dict(zip(all_features, full_vector))
+
+            # Khối lượng
+            c_d_mass = fm.get('c_d',    0.0)
+            p_q_mass = fm.get('p_q',    0.0)
+            f_q_mass = fm.get('f_q',    0.0)
+            c_q_mass = fm.get('c_q',    0.0)
+            w_mass   = fm.get('w',      0.0)
+
+            # Tỷ trọng (tránh chia 0)
+            ce_sg = fm.get('ce_sg', 1.0) or 1.0
+            f_sg  = fm.get('f_sg',  1.0) or 1.0
+            c_sg1 = fm.get('c_sg1', 1.0) or 1.0
+            p_sg  = fm.get('p_sg',  1.0) or 1.0
+
+            # Thể tích (m3)
+            V_cement     = c_d_mass / (ce_sg * 1000)
+            V_fine_agg   = f_q_mass / (f_sg  * 1000)
+            V_coarse_agg = c_q_mass / (c_sg1 * 1000)
+            V_plastic    = p_q_mass / (p_sg  * 1000)
+            V_water      = w_mass   / 1000
+            V_total      = V_cement + V_fine_agg + V_coarse_agg + V_plastic + V_water
+
+            # Dự đoán CS — dùng DataFrame tránh warning
+            pred_CS = predict_cs(full_vector)
+
+            # Penalty thể tích tổng (phải ~1m3)
+            penalty_vol = 0.0
+            if V_total < V_MIN_TARGET:
+                penalty_vol = PENALTY_FACTOR * (V_MIN_TARGET - V_total)
+            elif V_total > V_MAX_TARGET:
+                penalty_vol = PENALTY_FACTOR * (V_total - V_MAX_TARGET)
+
+            # Penalty nhựa (không quá 20%)
+            penalty_plastic = 0.0
+            if V_plastic > V_PLASTIC_ABSOLUTE_MAX:
+                penalty_plastic = PENALTY_FACTOR * 5 * (V_plastic - V_PLASTIC_ABSOLUTE_MAX)
+
+            # Penalty CS thấp hơn target
+            penalty_cs = 0.0
+            if pred_CS < target_CS:
+                penalty_cs = PENALTY_FACTOR * (target_CS - pred_CS)
+
+            # Overshoot — minimize nhưng chỉ tính khi pred >= target
+            delta_CS = (pred_CS - target_CS) if pred_CS >= target_CS else 0.0
+
+            fitness = (
+                delta_CS
+                + L1 * c_d_mass      # Minimize xi măng
+                - L2 * p_q_mass      # Maximize nhựa
+                + penalty_vol
+                + penalty_plastic
+                + penalty_cs         # Đảm bảo pred >= target
+            )
+            return fitness  # FOX minimize
+
+        # ── Retry loop ──────────────────────────────────────────
+        best_solution = None
+        best_pred_CS  = -np.inf
+        best_delta    = np.inf
+
+        for attempt in range(1, MAX_RETRIES + 1):
+            epoch = EPOCH_BASE if attempt == 1 else EPOCH_RETRY
+            app.logger.info(f"Optimization attempt {attempt}/{MAX_RETRIES}, epoch={epoch}, pop={POP_SIZE}")
+
+            problem_dict = {
+                "obj_func": fitness_func,
+                "bounds":   FloatVar(lb=lb, ub=ub),
+                "minmax":   "min",
+            }
+
+            try:
+                solver = OriginalFOX(epoch=epoch, pop_size=POP_SIZE)
+                agent  = solver.solve(problem_dict)
+                sol    = agent.solution
+
+                # Tính pred_CS cho solution này
+                full_vector = [0.0] * len(all_features)
                 for i, idx in enumerate(fixed_idx):
                     full_vector[idx] = fixed_values[i]
                 for i, idx in enumerate(free_idx):
-                    full_vector[idx] = candidate[i]
-                
-                feature_map = dict(zip(all_features, full_vector))
-                
-                # --- Lấy khối lượng và tỷ trọng ---
-                c_d_mass = feature_map.get('c_d', 0)
-                p_q_mass = feature_map.get('p_q', 0)
-                f_q_mass = feature_map.get('f_q', 0)
-                c_q_mass = feature_map.get('c_q', 0)
-                w_mass = feature_map.get('w', 0)
-                
-                ce_sg = feature_map.get('ce_sg', 1.0) or 1.0
-                f_sg = feature_map.get('f_sg', 1.0) or 1.0
-                ca_sg = feature_map.get('ca_sg', 1.0) or 1.0
-                p_sg = feature_map.get('p_sg', 1.0) or 1.0
-                
-                # --- Tính toán thể tích (m3) ---
-                V_cement = c_d_mass / (ce_sg * 1000)
-                V_fine_agg = f_q_mass / (f_sg * 1000)
-                V_coarse_agg = c_q_mass / (ca_sg * 1000)
-                V_plastic = p_q_mass / (p_sg * 1000)
-                V_water = w_mass / 1000
+                    full_vector[idx] = sol[i]
 
-                V_total = V_cement + V_fine_agg + V_coarse_agg + V_plastic + V_water
+                pred_CS = predict_cs(full_vector)
+                delta   = pred_CS - target_CS
 
-                # 2. Dự đoán Cường độ Nén (CS)
-                x_scaled = scaler.transform(np.array([full_vector])) 
-                pred_CS = model.predict(x_scaled)[0]
-
-                # --- TÍNH HÌNH PHẠT (Penalty Logic) ---
-                
-                # Hình phạt thể tích tổng (phải gần 1m3)
-                penalty_total_volume = 0
-                if V_total < V_MIN_TARGET:
-                    penalty_total_volume = PENALTY_FACTOR * (V_MIN_TARGET - V_total)
-                elif V_total > V_MAX_TARGET:
-                    penalty_total_volume = PENALTY_FACTOR * (V_total - V_MAX_TARGET)
-                    
-                # Hình phạt tỷ lệ nhựa (không quá 20%)
-                penalty_plastic_volume = 0
-                if V_plastic > V_PLASTIC_ABSOLUTE_MAX:
-                    penalty_plastic_volume = PENALTY_FACTOR * 10 * (V_plastic - V_PLASTIC_ABSOLUTE_MAX)
-
-                # Dự đoán CS phải >= Target CS
-                penalty_insufficient_CS = 0
-                if pred_CS < target_CS:
-                    # Nếu nhỏ hơn mục tiêu, áp đặt hình phạt nặng
-                    penalty_insufficient_CS = PENALTY_FACTOR * (target_CS - pred_CS)
-                
-                # Tính độ lệch cường độ (vẫn giữ để GA tìm điểm gần nhất phía trên target)
-                delta_CS = abs(pred_CS - target_CS)
-                
-                # 3. Kết hợp Đa Mục tiêu
-                total_fitness = (
-                    delta_CS + 
-                    (L1 * c_d_mass) -     # Tối thiểu Xi măng
-                    (L2 * p_q_mass) +     # Tối đa Nhựa
-                    penalty_total_volume + 
-                    penalty_plastic_volume +
-                    penalty_insufficient_CS   # Hình phạt nếu thấp hơn mục tiêu
+                app.logger.info(
+                    f"  Attempt {attempt}: pred_CS={pred_CS:.2f}, "
+                    f"target={target_CS}, delta={delta:.2f}"
                 )
-                return total_fitness
-        
-        problem = MyProblem()
-        ga_solver = OriginalFOX(epoch=100, pop_size=30) 
-        
-        try:
-            best_agent = ga_solver.solve(problem)
-            best_solution = best_agent.solution
-        except Exception as e:
-            app.logger.error(f"GA Solver error: {e}", exc_info=True)
-            return {
-                "Error": f"GA Solver Error: {e}. Check server logs for details.",
-                "Predicted_CS": None
+
+                # Ưu tiên: pred >= target VÀ delta nhỏ nhất
+                if pred_CS >= target_CS and delta < best_delta:
+                    best_delta    = delta
+                    best_solution = full_vector[:]
+                    best_pred_CS  = pred_CS
+                    app.logger.info(f"  ✅ New best: pred={pred_CS:.2f}, delta={delta:.2f}")
+
+                # Early stop nếu đủ gần
+                if pred_CS >= target_CS and delta < 2.0:
+                    app.logger.info(f"  Early stop: delta={delta:.2f} < 2.0 MPa")
+                    break
+
+            except Exception as e:
+                app.logger.error(f"Attempt {attempt} failed: {e}", exc_info=True)
+                continue
+
+        # Nếu không attempt nào đạt target → chạy thêm lần cuối mạnh hơn
+        if best_solution is None:
+            app.logger.warning("No attempt reached target CS. Running final heavy pass...")
+            problem_dict = {
+                "obj_func": fitness_func,
+                "bounds":   FloatVar(lb=lb, ub=ub),
+                "minmax":   "min",
             }
+            try:
+                solver = OriginalFOX(epoch=500, pop_size=80)
+                agent  = solver.solve(problem_dict)
+                sol    = agent.solution
 
-        # Khôi phục vector kết quả cuối cùng
-        result = [0]*len(all_features)
-        for i, idx in enumerate(fixed_idx):
-            result[idx] = fixed_values[i]
-        for i, idx in enumerate(free_idx):
-            result[idx] = best_solution[i]
+                full_vector = [0.0] * len(all_features)
+                for i, idx in enumerate(fixed_idx):
+                    full_vector[idx] = fixed_values[i]
+                for i, idx in enumerate(free_idx):
+                    full_vector[idx] = sol[i]
 
-        # Dự đoán lại CS với nghiệm tìm được
-        pred_CS = model.predict(scaler.transform(np.array([result])))[0]
-        
+                best_pred_CS  = predict_cs(full_vector)
+                best_solution = full_vector[:]
+                best_delta    = best_pred_CS - target_CS
+                app.logger.info(f"  Final pass: pred_CS={best_pred_CS:.2f}, delta={best_delta:.2f}")
+
+            except Exception as e:
+                return {"Error": f"All optimization attempts failed: {e}", "Predicted_CS": None}
+
         return {
-            "Optimized Materials": {feat: round(val, 4) for feat, val in zip(all_features, result)},
-            "Predicted_CS": round(pred_CS, 2)
+            "Optimized Materials": {
+                feat: round(val, 4)
+                for feat, val in zip(all_features, best_solution)
+            },
+            "Predicted_CS": round(best_pred_CS, 2),
+            "Delta_CS":     round(best_pred_CS - target_CS, 2),
         }
 
 
+# ============================================================
+# UTILITIES
+# ============================================================
 def list_logs():
     files = [f for f in os.listdir(LOG_DIR) if f.endswith('.csv')]
     files.sort()
     return files
 
 
+# ============================================================
+# ROUTES
+# ============================================================
 @app.route('/')
 @app.route('/home')
 def home():
     app.logger.info("Accessing home page.")
     histogram_dir = os.path.join("static", "histograms")
     histograms = [
-        fname
-        for fname in os.listdir(histogram_dir)
+        fname for fname in os.listdir(histogram_dir)
         if fname.lower().endswith((".png", ".jpg", ".jpeg"))
     ]
-    # SỬA LỖI: Cần truyền OPTIMIZE_ENABLED cho home.html (và base.html)
-    return render_template('home.html', 
+    return render_template('home.html',
                            histograms=histograms,
                            optimize_enabled=OPTIMIZE_ENABLED)
 
@@ -265,172 +324,170 @@ def predict():
     if request.method == 'POST':
         app.logger.info("Received POST request for single prediction.")
         try:
-            # Get 14 parameters from form
-            inputs = [
-                float(request.form[feat]) for feat in MODEL_FEATURES
-            ]
-            
-            # Check for negative values
+            inputs = [float(request.form[feat]) for feat in MODEL_FEATURES]
+
             if any(x < 0 for x in inputs):
                 error = "Please enter non-negative values."
-                app.logger.warning(f"Validation error: Negative values received: {inputs}")
-                return render_template('predict.html', prediction=None, error=error, features=MODEL_FEATURES)
-            
-            # Reshape and scale data
-            input_array = np.array(inputs).reshape(1, -1)
-            scaled_input = scaler.transform(input_array)
-            
-            # Predict c_cs (Concrete compressive strength)
-            prediction = model.predict(scaled_input)[0]
-            
-            # Data Logging
-            df_log = pd.DataFrame([inputs + [prediction]], columns=MODEL_FEATURES + ['Predicted_c_cs'])
-            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                return render_template('predict.html',
+                                       prediction=None, error=error,
+                                       features=MODEL_FEATURES)
+
+            # Dùng DataFrame tránh warning feature names
+            df_input   = pd.DataFrame([inputs], columns=MODEL_FEATURES)
+            scaled     = scaler.transform(df_input)
+            prediction = float(model.predict(scaled)[0])
+
+            # Log
+            df_log = pd.DataFrame([inputs + [prediction]],
+                                  columns=MODEL_FEATURES + ['Predicted_c_cs'])
+            timestamp    = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
             log_filename = f'single_{timestamp}.csv'
             df_log.to_csv(os.path.join(LOG_DIR, log_filename), index=False)
-            app.logger.info(f"Single prediction logged successfully to {log_filename}")
-            
-            return render_template('predict.html', prediction=prediction, error=None, features=MODEL_FEATURES)
-            
+            app.logger.info(f"Single prediction logged to {log_filename}")
+
+            return render_template('predict.html',
+                                   prediction=prediction, error=None,
+                                   features=MODEL_FEATURES)
+
         except ValueError:
-            error = "Please enter valid numbers for all fields."
-            app.logger.error("Input parsing failed (ValueError).", exc_info=True)
-            return render_template('predict.html', prediction=None, error=error, features=MODEL_FEATURES)
+            return render_template('predict.html',
+                                   prediction=None,
+                                   error="Please enter valid numbers for all fields.",
+                                   features=MODEL_FEATURES)
         except Exception as e:
-            error = f"An unexpected error occurred: {str(e)}"
             app.logger.critical(f"Critical prediction error: {e}", exc_info=True)
-            return render_template('predict.html', prediction=None, error=error, features=MODEL_FEATURES)
-    
-    return render_template('predict.html', prediction=None, error=None, features=MODEL_FEATURES)
+            return render_template('predict.html',
+                                   prediction=None,
+                                   error=f"An unexpected error occurred: {str(e)}",
+                                   features=MODEL_FEATURES)
+
+    return render_template('predict.html',
+                           prediction=None, error=None,
+                           features=MODEL_FEATURES)
 
 
 @app.route('/predict_csv', methods=['GET', 'POST'])
 def predict_csv():
-    # Giữ nguyên logic trả về HTML cho GET và POST (trong trường hợp lỗi)
     if request.method == 'POST':
-        app.logger.info("Received POST request for batch CSV prediction.")
+        app.logger.info("Received POST for batch CSV prediction.")
         if 'file' not in request.files:
-            return render_template('predict_csv.html', predictions=None, error="No file uploaded.")
-        
+            return render_template('predict_csv.html',
+                                   predictions=None, error="No file uploaded.")
+
         file = request.files['file']
         if file.filename == '':
-            return render_template('predict_csv.html', predictions=None, error="No file selected.")
-        
+            return render_template('predict_csv.html',
+                                   predictions=None, error="No file selected.")
+
         try:
             df = pd.read_csv(file)
-            
-            # Thêm kiểm tra số lượng cột
+
             if df.shape[1] != len(all_features):
-                 error = f"CSV file must have {len(all_features)} columns, but found {df.shape[1]}. Expected features: {', '.join(all_features)}"
-                 app.logger.error(error)
-                 return render_template('predict_csv.html', predictions=None, error=error)
-                 
-            X = df.values
-            scaled_X = scaler.transform(X)
-            predictions = model.predict(scaled_X)
-            
-            # Sử dụng tên cột chuẩn (tên ngắn) từ all_features
-            df.columns = all_features
+                error = (f"CSV must have {len(all_features)} columns, "
+                         f"found {df.shape[1]}. "
+                         f"Expected: {', '.join(all_features)}")
+                return render_template('predict_csv.html',
+                                       predictions=None, error=error)
+
+            df.columns    = all_features
+            scaled_X      = scaler.transform(df)   # df đã có tên cột → không warning
+            predictions   = model.predict(scaled_X)
             df['Predicted_c_cs'] = predictions
 
-            # --- Lưu log ---
-            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            timestamp    = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
             log_filename = f'batch_{timestamp}.csv'
             df.to_csv(os.path.join(LOG_DIR, log_filename), index=False)
-            app.logger.info(f"Batch prediction successful and logged to {log_filename}")
+            app.logger.info(f"Batch prediction logged to {log_filename}")
 
-            # Trả về HTML table cho frontend
-            # Đổi tên cột hiển thị cho dễ hiểu
             display_df = df.rename(columns=name_map).fillna(0).round(4)
-            return render_template('predict_csv.html', predictions=display_df.to_html(index=False), error=None)
-        
+            return render_template('predict_csv.html',
+                                   predictions=display_df.to_html(index=False),
+                                   error=None)
+
         except Exception as e:
-            app.logger.error(f"Error processing batch file: {e}", exc_info=True)
-            return render_template('predict_csv.html', predictions=None, error=f"Error processing file: {e}")
-    
-    df_html = "<p>Upload CSV file for batch prediction.</p>" 
-    return render_template('predict_csv.html', predictions=df_html, error=None)
+            app.logger.error(f"Batch prediction error: {e}", exc_info=True)
+            return render_template('predict_csv.html',
+                                   predictions=None,
+                                   error=f"Error processing file: {e}")
+
+    return render_template('predict_csv.html',
+                           predictions="<p>Upload CSV file for batch prediction.</p>",
+                           error=None)
 
 
 @app.route('/optimize', methods=['GET', 'POST'])
 def inverse_design():
-    """Endpoint xử lý Inverse Design/Tối ưu hóa."""
-    
-    # SỬA LỖI: Truyền biến OPTIMIZE_ENABLED và hằng số penalty
-    
-    # Chuẩn bị biến để truyền cho template (dù có lỗi hay không)
     template_vars = {
-        'all_features': all_features,
-        'name_map': name_map,
-        'optimize_enabled': OPTIMIZE_ENABLED
+        'all_features':     all_features,
+        'name_map':         name_map,
+        'optimize_enabled': OPTIMIZE_ENABLED,
     }
-    
-    if OPTIMIZE_ENABLED:
-        template_vars.update({
-            'L1': L1,
-            'L2': L2
-        })
-    else:
-        # Nếu tính năng bị vô hiệu hóa, chỉ trả về template với cảnh báo
-        return render_template('optimize.html', 
-                               error="Inverse Design is disabled (mealpy not found).", 
+
+    if not OPTIMIZE_ENABLED:
+        return render_template('optimize.html',
+                               error="Inverse Design is disabled (mealpy not found).",
                                **template_vars)
-        
+
+    template_vars.update({'L1': L1, 'L2': L2})
+
     if request.method == 'POST':
-        app.logger.info("Received POST request for Inverse Design.")
+        app.logger.info("Received POST for Inverse Design.")
         try:
-            # Lấy Target CS
-            target_CS = float(request.form.get('target_cs'))
+            target_CS      = float(request.form.get('target_cs'))
             fixed_features = {}
-            
-            # Lấy 14 giá trị features từ form
+
             for feat in all_features:
                 val_str = request.form.get(feat)
                 if val_str:
                     val = float(val_str)
-                    # Chỉ coi là ràng buộc cố định nếu giá trị khác None/0
                     if val != 0:
                         fixed_features[feat] = val
-            
-            # Kiểm tra Target CS
+
             if target_CS < 10 or target_CS > 90:
-                # Trả về template_vars với lỗi
-                return render_template('optimize.html', 
-                                       error=f"WARNING: Target CS {target_CS} MPa is outside the range of reliable data (10-90 MPa).", 
+                return render_template(
+                    'optimize.html',
+                    error=f"WARNING: Target CS {target_CS} MPa is outside reliable range (10–90 MPa).",
+                    **template_vars
+                )
+
+            results = optimize_materials(target_CS, **fixed_features)
+
+            if "Error" in results:
+                return render_template('optimize.html',
+                                       error=results["Error"],
                                        **template_vars)
 
-            # Chạy tối ưu hóa
-            results = optimize_materials(target_CS, **fixed_features)
-            
-            if "Error" in results:
-                return render_template('optimize.html', error=results["Error"], **template_vars)
+            optimized_list = [
+                (name_map.get(k, k), v)
+                for k, v in results["Optimized Materials"].items()
+            ]
 
-            optimized_materials = results["Optimized Materials"]
-            predicted_cs = results["Predicted_CS"]
-            
-            # Định dạng output thành danh sách các cặp (Component, Value)
-            optimized_list = [(name_map.get(k, k), v) for k, v in optimized_materials.items()]
-            
-            # Kết hợp các biến kết quả vào template_vars
             template_vars.update({
-                'target_cs': target_CS,
-                'predicted_cs': predicted_cs, 
-                'optimized_list': optimized_list
+                'target_cs':     target_CS,
+                'predicted_cs':  results["Predicted_CS"],
+                'delta_cs':      results["Delta_CS"],
+                'optimized_list': optimized_list,
             })
-            
-            return render_template('optimize.html', form_data=request.form, **template_vars)
+
+            return render_template('optimize.html',
+                                   form_data=request.form,
+                                   **template_vars)
 
         except ValueError:
-            error = "Please enter valid numbers for Target CS and all fixed fields."
-            app.logger.error("Input parsing failed (ValueError) in /optimize.", exc_info=True)
-            return render_template('optimize.html', error=error, form_data=request.form, **template_vars)
+            return render_template('optimize.html',
+                                   error="Please enter valid numbers.",
+                                   form_data=request.form,
+                                   **template_vars)
         except Exception as e:
-            error = f"An unexpected error occurred during optimization: {str(e)}"
-            app.logger.critical(f"Critical optimization error: {e}", exc_info=True)
-            return render_template('optimize.html', error=error, form_data=request.form, **template_vars)
-    
-    # Xử lý GET request cho /optimize
-    return render_template('optimize.html', form_data=request.form, **template_vars)
+            app.logger.critical(f"Optimization error: {e}", exc_info=True)
+            return render_template('optimize.html',
+                                   error=f"Unexpected error: {str(e)}",
+                                   form_data=request.form,
+                                   **template_vars)
+
+    return render_template('optimize.html',
+                           form_data=request.form,
+                           **template_vars)
 
 
 @app.route('/chart', methods=['GET'])
@@ -438,55 +495,50 @@ def chart():
     logs = list_logs()
     return render_template('chart.html', logs=logs)
 
-# Lấy dữ liệu prediction cho 1 log (API - nên trả về JSON)
+
 @app.route('/chart_data/<log_file>', methods=['GET'])
 def chart_data(log_file):
     path = os.path.join(LOG_DIR, log_file)
     if not os.path.exists(path):
-        app.logger.warning(f"Chart data request for non-existent file: {log_file}")
         return jsonify({'error': 'File not found'}), 404
-    df = pd.read_csv(path)
-    # Đổi tên cột cho dễ hiểu khi hiển thị trên biểu đồ
-    df = df.rename(columns=name_map)
-    data = df.to_dict(orient='records')
-    return jsonify(data)
+    df   = pd.read_csv(path).rename(columns=name_map)
+    return jsonify(df.to_dict(orient='records'))
 
-# Upload reality output để so sánh (API - nên trả về JSON)
+
 @app.route('/upload_reality/<log_file>', methods=['POST'])
 def upload_reality(log_file):
     file = request.files.get('reality_csv')
     if not file:
         return jsonify({'error': 'No file uploaded'}), 400
-        
+
     path = os.path.join(LOG_DIR, log_file)
     try:
-        df_pred = pd.read_csv(path)
+        df_pred   = pd.read_csv(path)
         df_actual = pd.read_csv(file)
     except FileNotFoundError:
-        app.logger.error(f"Attempted reality upload failed: Log file {log_file} not found.")
-        return jsonify({'error': 'Target log file not found'}), 404
+        return jsonify({'error': 'Log file not found'}), 404
     except Exception as e:
-        app.logger.error(f"Failed to read CSV files for reality upload: {e}")
-        return jsonify({'error': 'Failed to read uploaded CSV data'}), 400
+        return jsonify({'error': f'Failed to read CSV: {e}'}), 400
 
     if len(df_pred) != len(df_actual):
-        app.logger.warning("Reality upload mismatch: Prediction length != Actual length.")
-        return jsonify({'error': 'Length mismatch'}), 400
-    
+        return jsonify({'error': 'Row count mismatch'}), 400
     if df_actual.shape[1] < 1:
-        return jsonify({'error': 'Reality CSV must contain at least one column (the actual values).'}), 400
+        return jsonify({'error': 'Reality CSV must have at least 1 column'}), 400
 
-    df_pred['y_true'] = df_actual.iloc[:, -1] # giả sử cột cuối là reality
+    df_pred['y_true'] = df_actual.iloc[:, -1]
     df_pred.to_csv(path, index=False)
-    app.logger.info(f"Reality data uploaded and saved for log file: {log_file}")
+    app.logger.info(f"Reality data saved for {log_file}")
     return jsonify({'success': True})
+
 
 @app.context_processor
 def inject_optimize_status():
-    """Tự động truyền trạng thái optimize vào mọi template mà không cần viết lại."""
     return dict(optimize_enabled=OPTIMIZE_ENABLED)
 
+
+# ============================================================
+# MAIN
+# ============================================================
 if __name__ == '__main__':
     app.logger.info(f"Starting server on port {PORT}...")
-    # Tắt use_reloader và debug để chạy ổn định hơn trên server/Docker
     app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False)
