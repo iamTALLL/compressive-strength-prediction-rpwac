@@ -184,10 +184,10 @@ if OPTIMIZE_ENABLED:
     V_MAX_TARGET           = 1.10
     L1                     = 0.005
     L2                     = 0.0025
-    MAX_RETRIES            = 3
-    EPOCH_BASE             = 200
-    EPOCH_RETRY            = 400
-    POP_SIZE               = 60
+    MAX_RETRIES            = 2
+    EPOCH_BASE             = 50
+    EPOCH_RETRY            = 100
+    POP_SIZE               = 20
     V_PLASTIC_ABSOLUTE_MAX = 0.20
 
     def optimize_materials(target_CS, **fixed_features):
