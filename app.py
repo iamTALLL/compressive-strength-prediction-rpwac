@@ -76,7 +76,7 @@ KEY_WATER     = None
 
 try:
     scaler = joblib.load('scaler.pkl')
-    model  = joblib.load('xgb_woa_best_model.pkl')
+    model  = joblib.load('best_inverse_design_xgboost.pkl')
     app.logger.info("Model and scaler loaded successfully.")
 
     try:
