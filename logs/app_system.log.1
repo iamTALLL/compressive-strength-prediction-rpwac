@@ -1,0 +1,1567 @@
+2025-10-27 21:10:47,425 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:10:47,436 - [INFO] - Starting server on port 5004...
+2025-10-27 21:10:49,216 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:10:49,220 - [INFO] - Starting server on port 5004...
+2025-10-27 21:11:05,552 - [INFO] - Accessing home page.
+2025-10-27 21:12:38,878 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:12:38,881 - [INFO] - Starting server on port 5004...
+2025-10-27 21:12:40,605 - [INFO] - Successfully loaded scaler.pkl and xgb_woa_best_model.pkl
+2025-10-27 21:12:40,608 - [INFO] - Starting server on port 5004...
+2025-10-27 21:12:40,663 - [INFO] - Accessing home page.
+2025-10-27 21:15:57,393 - [INFO] - Model and scaler loaded successfully.
+2025-10-27 21:15:57,401 - [INFO] - Starting server on port 5004...
+2025-10-27 21:15:59,081 - [INFO] - Accessing home page.
+2025-11-26 21:50:56,162 - [INFO] - Model and scaler loaded successfully.
+2025-11-26 21:50:56,169 - [INFO] - Starting server on port 5004...
+2025-11-26 21:51:03,563 - [INFO] - Accessing home page.
+2025-11-26 21:51:18,788 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:51:18,823 - [ERROR] - Error processing batch file: X has 15 features, but MinMaxScaler is expecting 14 features as input.
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 149, in predict_csv
+    scaled_X = scaler.transform(X)
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\_set_output.py", line 316, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\preprocessing\_data.py", line 545, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\validation.py", line 2975, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313\Lib\site-packages\sklearn\utils\validation.py", line 2839, in _check_n_features
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: X has 15 features, but MinMaxScaler is expecting 14 features as input.
+2025-11-26 21:52:05,675 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:52:05,703 - [INFO] - Batch prediction successful and logged to batch_20251126_215205.csv
+2025-11-26 21:53:51,040 - [INFO] - Received POST request for batch CSV prediction.
+2025-11-26 21:53:51,050 - [INFO] - Batch prediction successful and logged to batch_20251126_215351.csv
+2025-12-16 13:39:20,228 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:39:20,230 - [INFO] - Feature bounds created.
+2025-12-16 13:39:20,235 - [INFO] - Starting server on port 5004...
+2025-12-16 13:39:31,403 - [INFO] - Accessing home page.
+2025-12-16 13:39:31,437 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\NCKH2025\app.py", line 259, in home
+    return render_template('home.html', histograms=histograms)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\NCKH2025\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\NCKH2025\templates\base.html", line 40, in top-level template code
+    <a class="nav-link" href="{{ url_for('optimize') }}">Inverse Design</a>
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\NCKH2025\venv\lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'optimize'. Did you mean 'home' instead?
+2025-12-16 13:42:39,727 - [INFO] - Accessing home page.
+2025-12-16 13:42:40,505 - [INFO] - Accessing home page.
+2025-12-16 13:42:55,267 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:42:55,267 - [INFO] - Feature bounds created.
+2025-12-16 13:42:55,274 - [INFO] - Starting server on port 5004...
+2025-12-16 13:42:57,098 - [INFO] - Accessing home page.
+2025-12-16 13:42:57,111 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\NCKH2025\app.py", line 260, in home
+    return render_template('home.html',
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\NCKH2025\venv\lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\NCKH2025\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\NCKH2025\templates\base.html", line 40, in top-level template code
+    <a class="nav-link" href="{{ url_for('optimize') }}">Inverse Design</a>
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\NCKH2025\venv\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\NCKH2025\venv\lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'optimize'. Did you mean 'home' instead?
+2025-12-16 13:44:44,233 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:44:44,234 - [INFO] - Feature bounds created.
+2025-12-16 13:44:44,241 - [INFO] - Starting server on port 5004...
+2025-12-16 13:44:46,408 - [INFO] - Accessing home page.
+2025-12-16 13:44:59,401 - [INFO] - Accessing home page.
+2025-12-16 13:45:12,577 - [INFO] - Accessing home page.
+2025-12-16 13:45:26,224 - [INFO] - Accessing home page.
+2025-12-16 13:45:34,267 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:45:34,280 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = FOX.DevFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:06,939 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:49:06,949 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = OriginalFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:15,787 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 13:49:15,796 - [CRITICAL] - Critical optimization error: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+Traceback (most recent call last):
+  File "D:\NCKH2025\app.py", line 405, in inverse_design
+    results = optimize_materials(target_CS, **fixed_features)
+  File "D:\NCKH2025\app.py", line 215, in optimize_materials
+    ga_solver = OriginalFOX(epoch=100, pop_size=30)
+AttributeError: module 'mealpy.swarm_based.FOX' has no attribute 'DevFOX'
+2025-12-16 13:49:30,278 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 13:49:30,278 - [INFO] - Feature bounds created.
+2025-12-16 13:49:30,284 - [INFO] - Starting server on port 5004...
+2025-12-16 13:49:31,895 - [INFO] - Accessing home page.
+2025-12-16 13:49:36,731 - [INFO] - Received POST request for Inverse Design.
+2025-12-16 14:04:48,407 - [INFO] - Model and scaler loaded successfully.
+2025-12-16 14:04:48,407 - [INFO] - Feature bounds created.
+2025-12-16 14:04:48,413 - [INFO] - Starting server on port 5004...
+2025-12-16 14:04:50,169 - [INFO] - Accessing home page.
+2025-12-16 14:04:54,643 - [INFO] - Received POST request for Inverse Design.
+2025-12-17 20:10:46,848 - [INFO] - Model and scaler loaded successfully.
+2025-12-17 20:10:46,849 - [INFO] - Feature bounds created.
+2025-12-17 20:10:46,855 - [INFO] - Starting server on port 5004...
+2025-12-17 20:10:49,985 - [INFO] - Accessing home page.
+2025-12-17 20:10:57,421 - [INFO] - Received POST request for Inverse Design.
+2025-12-17 20:12:04,871 - [INFO] - Received POST request for batch CSV prediction.
+2025-12-17 20:12:04,901 - [INFO] - Batch prediction successful and logged to batch_20251217_201204.csv
+2025-12-17 20:12:27,744 - [INFO] - Accessing home page.
+2025-12-17 20:13:41,863 - [INFO] - Received POST request for Inverse Design.
+2025-12-24 16:56:01,548 - [INFO] - Model and scaler loaded successfully.
+2025-12-24 16:56:01,549 - [INFO] - Feature bounds created.
+2025-12-24 16:56:01,555 - [INFO] - Starting server on port 5004...
+2025-12-24 16:56:03,261 - [INFO] - Accessing home page.
+2025-12-24 16:56:42,736 - [INFO] - Accessing home page.
+2025-12-24 16:56:46,393 - [INFO] - Received POST request for Inverse Design.
+2026-01-08 14:47:38,165 - [INFO] - Model and scaler loaded successfully.
+2026-01-08 14:47:38,166 - [INFO] - Feature bounds created.
+2026-01-08 14:47:38,172 - [INFO] - Starting server on port 5004...
+2026-01-08 14:47:44,661 - [INFO] - Accessing home page.
+2026-01-08 14:47:51,887 - [INFO] - Accessing home page.
+2026-01-08 14:47:53,937 - [INFO] - Accessing home page.
+2026-01-08 14:48:10,099 - [INFO] - Accessing home page.
+2026-01-08 14:51:03,764 - [INFO] - Accessing home page.
+2026-01-08 14:51:17,688 - [INFO] - Model and scaler loaded successfully.
+2026-01-08 14:51:17,689 - [INFO] - Feature bounds created.
+2026-01-08 14:51:17,696 - [INFO] - Starting server on port 5004...
+2026-01-08 14:51:19,336 - [INFO] - Accessing home page.
+2026-01-08 15:15:20,130 - [INFO] - Model and scaler loaded successfully.
+2026-01-08 15:15:20,130 - [INFO] - Feature bounds created.
+2026-01-08 15:15:20,137 - [INFO] - Starting server on port 5004...
+2026-01-08 15:15:21,578 - [INFO] - Accessing home page.
+2026-01-08 15:15:29,131 - [INFO] - Accessing home page.
+2026-01-08 15:18:14,043 - [INFO] - Accessing home page.
+2026-01-08 15:18:38,058 - [INFO] - Model and scaler loaded successfully.
+2026-01-08 15:18:38,059 - [INFO] - Feature bounds created.
+2026-01-08 15:18:38,065 - [INFO] - Starting server on port 5004...
+2026-01-08 15:18:39,390 - [INFO] - Accessing home page.
+2026-01-08 15:18:48,916 - [INFO] - Received POST request for Inverse Design.
+2026-01-08 15:20:23,751 - [INFO] - Received POST request for Inverse Design.
+2026-01-08 15:20:30,304 - [INFO] - Accessing home page.
+2026-01-08 15:21:09,211 - [INFO] - Model and scaler loaded successfully.
+2026-01-08 15:21:09,212 - [INFO] - Feature bounds created.
+2026-01-08 15:21:09,219 - [INFO] - Starting server on port 5004...
+2026-01-08 15:21:10,778 - [INFO] - Accessing home page.
+2026-01-08 15:21:18,454 - [INFO] - Received POST request for Inverse Design.
+2026-01-08 15:21:31,923 - [INFO] - Accessing home page.
+2026-05-03 21:25:33,273 - [CRITICAL] - Error: Model or scaler file not found: [Errno 2] No such file or directory: 'xgb_woa_best_model.pkl'. Exiting.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 59, in <module>
+    model = joblib.load('xgb_woa_best_model.pkl')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 735, in load
+    with open(filename, "rb") as f:
+         ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'xgb_woa_best_model.pkl'
+2026-05-03 21:27:46,512 - [CRITICAL] - FATAL ERROR during model loading or initialization: No module named 'numpy._core'
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 58, in <module>
+    scaler = joblib.load('scaler.pkl')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python312\Lib\pickle.py", line 1256, in load
+    dispatch[key[0]](self)
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 462, in load_build
+    _array_payload = array_wrapper.read(self, self.ensure_native_byte_order)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 284, in read
+    array = self.read_array(unpickler, ensure_native_byte_order)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 175, in read_array
+    array = pickle.load(unpickler.file_handle)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy._core'
+2026-05-03 21:29:03,635 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:29:03,636 - [INFO] - Feature bounds created.
+2026-05-03 21:29:03,641 - [INFO] - Starting server on port 5004...
+2026-05-03 21:29:11,352 - [INFO] - Accessing home page.
+2026-05-03 21:29:54,100 - [INFO] - Accessing home page.
+2026-05-03 21:35:57,678 - [INFO] - Received POST request for Inverse Design.
+2026-05-03 21:40:16,969 - [CRITICAL] - FATAL ERROR during model loading or initialization: No module named 'numpy._core'
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 58, in <module>
+    scaler = joblib.load('scaler.pkl')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python312\Lib\pickle.py", line 1256, in load
+    dispatch[key[0]](self)
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 462, in load_build
+    _array_payload = array_wrapper.read(self, self.ensure_native_byte_order)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 284, in read
+    array = self.read_array(unpickler, ensure_native_byte_order)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\joblib\numpy_pickle.py", line 175, in read_array
+    array = pickle.load(unpickler.file_handle)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy._core'
+2026-05-03 21:40:53,469 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:40:53,469 - [INFO] - Feature bounds created.
+2026-05-03 21:40:53,473 - [INFO] - Starting server on port 5004...
+2026-05-03 21:41:04,505 - [INFO] - Received POST request for Inverse Design.
+2026-05-03 21:41:04,506 - [INFO] - Optimization attempt 1/3, epoch=100
+2026-05-03 21:41:09,140 - [INFO] - Accessing home page.
+2026-05-03 21:41:10,160 - [INFO] -   Attempt 1: pred_CS=39.58, target=45.0, delta=-5.42
+2026-05-03 21:41:10,161 - [INFO] - Optimization attempt 2/3, epoch=200
+2026-05-03 21:41:15,176 - [INFO] - Received POST request for Inverse Design.
+2026-05-03 21:41:15,177 - [INFO] - Optimization attempt 1/3, epoch=100
+2026-05-03 21:41:22,461 - [INFO] -   Attempt 1: pred_CS=51.68, target=45.0, delta=6.68
+2026-05-03 21:41:22,488 - [INFO] - Optimization attempt 2/3, epoch=200
+2026-05-03 21:41:22,540 - [INFO] -   Attempt 2: pred_CS=38.44, target=45.0, delta=-6.56
+2026-05-03 21:41:22,541 - [INFO] - Optimization attempt 3/3, epoch=200
+2026-05-03 21:41:36,347 - [INFO] -   Attempt 3: pred_CS=47.92, target=45.0, delta=2.92
+2026-05-03 21:41:36,928 - [INFO] -   Attempt 2: pred_CS=52.79, target=45.0, delta=7.79
+2026-05-03 21:41:36,928 - [INFO] - Optimization attempt 3/3, epoch=200
+2026-05-03 21:41:46,297 - [INFO] -   Attempt 3: pred_CS=39.65, target=45.0, delta=-5.35
+2026-05-03 21:46:00,871 - [CRITICAL] - FATAL ERROR during initialization: No module named 'numpy._core'
+2026-05-03 21:47:57,618 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:47:57,619 - [INFO] - Feature bounds created successfully.
+2026-05-03 21:47:57,622 - [INFO] - Starting server on port 5004...
+2026-05-03 21:49:06,083 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:49:06,084 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:49:06,094 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:49:06,104 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:49:06,107 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:49:06,108 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:49:06,110 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:49:06,112 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:50:23,698 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:50:23,699 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:50:23,702 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:23,705 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:50:23,708 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:23,715 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:50:23,723 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:23,725 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:50:30,028 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:50:30,030 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:50:30,032 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:30,034 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:50:30,037 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:30,039 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:50:30,041 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- ca_sg
+Feature names seen at fit time, yet now missing:
+- c_sg1
+
+2026-05-03 21:50:30,043 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:50:56,198 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:50:56,199 - [INFO] - Feature bounds created successfully.
+2026-05-03 21:50:56,203 - [INFO] - Starting server on port 5004...
+2026-05-03 21:50:58,444 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:50:58,445 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:50:58,448 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:50:58,455 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:50:58,458 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:50:58,459 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:50:58,462 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:50:58,464 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:51:03,059 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:51:03,059 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:51:03,061 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:03,063 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:51:03,065 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:03,068 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:51:03,070 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:03,072 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:51:04,431 - [INFO] - Accessing home page.
+2026-05-03 21:51:09,978 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:51:09,979 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:51:09,981 - [ERROR] - Attempt 1 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:09,983 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:51:09,985 - [ERROR] - Attempt 2 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:09,987 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:51:09,990 - [ERROR] - Attempt 3 failed: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+Traceback (most recent call last):
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 226, in optimize_materials
+    agent  = solver.solve(problem_dict)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 230, in solve
+    self.initialization()
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 135, in initialization
+    self.pop = self.generate_population(self.pop_size)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 333, in generate_population
+    pop = [self.generate_agent() for _ in range(0, pop_size)]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 306, in generate_agent
+    agent.target = self.get_target(agent.solution)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\optimizer.py", line 407, in get_target
+    return self.problem.get_target(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\mealpy\utils\problem.py", line 198, in get_target
+    objs = self.obj_func(solution)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 177, in fitness_func
+    pred_CS = predict_cs(full_vector)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 111, in predict_cs
+    scaled   = scaler.transform(df_input)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\utils\_set_output.py", line 295, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\preprocessing\_data.py", line 534, in transform
+    X = self._validate_data(
+        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 608, in _validate_data
+    self._check_feature_names(X, reset=reset)
+  File "C:\NCKH\env_ai\Lib\site-packages\sklearn\base.py", line 535, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names must be in the same order as they were in fit.
+
+2026-05-03 21:51:09,992 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-03 21:55:25,358 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:55:25,358 - [CRITICAL] - FATAL ERROR during initialization: index 14 is out of bounds for axis 0 with size 14
+2026-05-03 21:56:29,201 - [INFO] - Model and scaler loaded successfully.
+2026-05-03 21:56:29,202 - [INFO] - Feature bounds created successfully.
+2026-05-03 21:56:29,206 - [INFO] - Starting server on port 5004...
+2026-05-03 21:56:34,940 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:56:34,942 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:56:44,576 - [INFO] - Accessing home page.
+2026-05-03 21:56:50,270 - [INFO] - Received POST for Inverse Design.
+2026-05-03 21:56:50,272 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 21:57:04,010 - [INFO] -   Attempt 1: pred_CS=42.08, target=45.0, delta=-2.92
+2026-05-03 21:57:04,010 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:57:31,942 - [INFO] -   Attempt 1: pred_CS=54.68, target=45.0, delta=9.68
+2026-05-03 21:57:31,998 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 21:58:22,111 - [INFO] -   Attempt 2: pred_CS=52.23, target=45.0, delta=7.23
+2026-05-03 21:58:22,123 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:58:55,941 - [INFO] -   Attempt 2: pred_CS=41.17, target=45.0, delta=-3.83
+2026-05-03 21:58:55,943 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 21:59:45,900 - [INFO] -   Attempt 3: pred_CS=40.79, target=45.0, delta=-4.21
+2026-05-03 22:00:02,835 - [INFO] -   Attempt 3: pred_CS=42.17, target=45.0, delta=-2.83
+2026-05-03 22:04:02,800 - [INFO] - Received POST for Inverse Design.
+2026-05-03 22:04:02,801 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 22:04:28,619 - [INFO] -   Attempt 1: pred_CS=37.43, target=45.0, delta=-7.57
+2026-05-03 22:04:28,623 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 22:05:09,994 - [INFO] -   Attempt 2: pred_CS=46.89, target=45.0, delta=1.89
+2026-05-03 22:05:10,009 - [INFO] -   Early stop: delta=1.89 < 2.0 MPa
+2026-05-03 22:06:50,796 - [INFO] - Accessing home page.
+2026-05-03 22:07:06,749 - [INFO] - Received POST for Inverse Design.
+2026-05-03 22:07:06,751 - [INFO] - Optimization attempt 1/3, epoch=150, pop=50
+2026-05-03 22:07:28,191 - [INFO] -   Attempt 1: pred_CS=38.64, target=45.0, delta=-6.36
+2026-05-03 22:07:28,191 - [INFO] - Optimization attempt 2/3, epoch=300, pop=50
+2026-05-03 22:08:09,661 - [INFO] -   Attempt 2: pred_CS=47.51, target=45.0, delta=2.51
+2026-05-03 22:08:09,664 - [INFO] - Optimization attempt 3/3, epoch=300, pop=50
+2026-05-03 22:08:51,064 - [INFO] -   Attempt 3: pred_CS=45.93, target=45.0, delta=0.93
+2026-05-03 22:08:51,067 - [INFO] -   Early stop: delta=0.93 < 2.0 MPa
+2026-05-03 22:12:14,286 - [INFO] - Received POST for batch CSV prediction.
+2026-05-03 22:12:14,349 - [INFO] - Batch prediction logged to batch_20260503_221214.csv
+2026-05-03 22:12:39,484 - [INFO] - Reality data saved for batch_20260503_221214.csv
+2026-05-03 22:12:52,942 - [INFO] - Accessing home page.
+2026-05-03 22:13:18,401 - [INFO] - Received POST for batch CSV prediction.
+2026-05-03 22:13:18,414 - [INFO] - Batch prediction logged to batch_20260503_221318.csv
+2026-05-03 22:13:42,217 - [INFO] - Reality data saved for batch_20260503_221318.csv
+2026-05-21 23:22:44,484 - [INFO] - Model and scaler loaded successfully.
+2026-05-21 23:22:44,487 - [INFO] - Feature bounds and key mapping created successfully.
+2026-05-21 23:22:44,494 - [INFO] - Starting server on port 5004...
+2026-05-21 23:22:54,833 - [INFO] - Accessing home page.
+2026-05-21 23:23:03,513 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:23:03,514 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:23:06,054 - [INFO] -   Attempt 1: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:23:06,055 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:23:10,376 - [INFO] -   Attempt 2: pred_CS=20.14, target=45.0, delta=-24.86
+2026-05-21 23:23:10,376 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:24:25,054 - [INFO] -   Final pass: pred_CS=20.56, delta=-24.44
+2026-05-21 23:29:14,713 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:29:14,719 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:29:17,696 - [INFO] - Accessing home page.
+2026-05-21 23:29:17,916 - [INFO] -   Attempt 1: pred_CS=21.10, target=45.0, delta=-23.90
+2026-05-21 23:29:17,918 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:29:23,877 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:29:23,878 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:29:25,381 - [INFO] -   Attempt 2: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:29:25,384 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:29:28,678 - [INFO] -   Attempt 1: pred_CS=21.10, target=45.0, delta=-23.90
+2026-05-21 23:29:28,680 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:29:40,575 - [INFO] -   Attempt 2: pred_CS=20.14, target=45.0, delta=-24.86
+2026-05-21 23:29:40,580 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:31:43,916 - [INFO] -   Final pass: pred_CS=20.56, delta=-24.44
+2026-05-21 23:31:49,177 - [INFO] -   Final pass: pred_CS=21.10, delta=-23.90
+2026-05-21 23:41:36,053 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:41:36,072 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:41:39,059 - [INFO] - Accessing home page.
+2026-05-21 23:41:39,226 - [INFO] -   Attempt 1: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:41:39,226 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:41:43,197 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:41:43,198 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:41:48,996 - [INFO] -   Attempt 2: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:41:48,999 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:41:50,382 - [INFO] -   Attempt 1: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:41:50,385 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:42:01,549 - [INFO] -   Attempt 2: pred_CS=21.10, target=45.0, delta=-23.90
+2026-05-21 23:42:01,552 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:45:13,470 - [INFO] -   Final pass: pred_CS=20.83, delta=-24.17
+2026-05-21 23:45:17,685 - [INFO] -   Final pass: pred_CS=21.10, delta=-23.90
+2026-05-21 23:51:42,054 - [INFO] - Accessing home page.
+2026-05-21 23:51:48,446 - [INFO] - Received POST for Inverse Design.
+2026-05-21 23:51:48,453 - [INFO] - Optimization attempt 1/2, epoch=50, pop=20
+2026-05-21 23:51:50,774 - [INFO] -   Attempt 1: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:51:50,774 - [INFO] - Optimization attempt 2/2, epoch=100, pop=20
+2026-05-21 23:51:55,106 - [INFO] -   Attempt 2: pred_CS=20.56, target=45.0, delta=-24.44
+2026-05-21 23:51:55,106 - [WARNING] - No attempt reached target CS. Running final heavy pass...
+2026-05-21 23:53:05,591 - [INFO] -   Final pass: pred_CS=20.56, delta=-24.44
+2026-05-22 00:09:24,361 - [INFO] - Model loaded successfully.
+2026-05-22 00:11:51,159 - [INFO] - Model loaded successfully.
+2026-05-22 00:11:51,160 - [WARNING] - feature_names_in_ not found. Using feature_bounds keys.
+2026-05-22 00:11:51,163 - [INFO] - Starting server on port 5004
+2026-05-22 00:11:56,456 - [INFO] - Attempt 1
+2026-05-22 00:12:21,276 - [INFO] - Predicted CS = 38.95
+2026-05-22 00:12:21,276 - [INFO] - Attempt 2
+2026-05-22 00:13:06,478 - [INFO] - Predicted CS = 37.23
+2026-05-22 00:13:06,478 - [INFO] - Attempt 3
+2026-05-22 00:13:47,203 - [INFO] - Predicted CS = 40.92
+2026-05-22 00:14:10,009 - [INFO] - Attempt 1
+2026-05-22 00:14:35,976 - [INFO] - Predicted CS = 35.52
+2026-05-22 00:14:35,976 - [INFO] - Attempt 2
+2026-05-22 00:15:17,024 - [INFO] - Predicted CS = 40.95
+2026-05-22 00:15:17,025 - [INFO] - Attempt 3
+2026-05-22 00:15:56,385 - [INFO] - Predicted CS = 37.96
+2026-05-22 00:16:29,019 - [INFO] - Attempt 1
+2026-05-22 00:16:55,557 - [INFO] - Predicted CS = 39.17
+2026-05-22 00:17:09,087 - [INFO] - Attempt 1
+2026-05-22 00:17:36,667 - [INFO] - Predicted CS = 35.64
+2026-05-22 00:17:36,667 - [INFO] - Attempt 2
+2026-05-22 00:18:34,279 - [INFO] - Predicted CS = 35.91
+2026-05-22 00:18:34,279 - [INFO] - Attempt 3
+2026-05-22 00:19:41,613 - [INFO] - Predicted CS = 30.29
+2026-05-22 00:21:00,175 - [INFO] - Attempt 1
+2026-05-22 00:21:28,985 - [INFO] - Predicted CS = 31.85
+2026-05-22 00:21:28,985 - [INFO] - Attempt 2
+2026-05-22 00:21:29,868 - [INFO] - Attempt 1
+2026-05-22 00:22:14,248 - [INFO] - Predicted CS = 41.54
+2026-05-22 00:22:14,250 - [INFO] - Attempt 2
+2026-05-22 00:23:04,402 - [INFO] - Predicted CS = 34.72
+2026-05-22 00:23:04,403 - [INFO] - Attempt 3
+2026-05-22 00:23:39,652 - [INFO] - Predicted CS = 39.20
+2026-05-22 00:23:39,654 - [INFO] - Attempt 3
+2026-05-22 00:24:29,073 - [INFO] - Predicted CS = 41.43
+2026-05-22 00:24:46,026 - [INFO] - Predicted CS = 38.35
+2026-05-22 00:28:22,516 - [INFO] - Attempt 1
+2026-05-22 00:28:28,690 - [INFO] - Attempt 1
+2026-05-22 00:29:03,797 - [INFO] - Predicted CS = 39.37
+2026-05-22 00:29:03,797 - [INFO] - Attempt 2
+2026-05-22 00:29:10,090 - [INFO] - Predicted CS = 37.75
+2026-05-22 00:29:10,092 - [INFO] - Attempt 2
+2026-05-22 00:30:29,033 - [INFO] - Predicted CS = 47.81
+2026-05-22 00:30:29,034 - [INFO] - Attempt 3
+2026-05-22 00:30:35,494 - [INFO] - Predicted CS = 35.82
+2026-05-22 00:30:35,496 - [INFO] - Attempt 3
+2026-05-22 00:31:54,873 - [INFO] - Predicted CS = 37.80
+2026-05-22 00:31:59,134 - [INFO] - Predicted CS = 39.56
+2026-05-22 00:34:22,897 - [INFO] - Attempt 1
+2026-05-22 00:34:50,503 - [INFO] - Predicted CS = 36.05
+2026-05-22 00:34:50,504 - [INFO] - Attempt 2
+2026-05-22 00:35:59,445 - [INFO] - Predicted CS = 39.03
+2026-05-22 00:35:59,445 - [INFO] - Attempt 3
+2026-05-22 00:36:55,620 - [INFO] - Predicted CS = 36.48
+2026-05-22 00:37:40,332 - [INFO] - Attempt 1
+2026-05-22 00:37:58,873 - [INFO] - Predicted CS = 38.50
+2026-05-22 00:37:58,874 - [INFO] - Attempt 2
+2026-05-22 00:38:40,004 - [INFO] - Predicted CS = 41.45
+2026-05-22 00:38:40,004 - [INFO] - Attempt 3
+2026-05-22 00:39:19,094 - [INFO] - Predicted CS = 37.83
+2026-05-22 00:43:42,168 - [INFO] - Model files loaded.
+2026-05-22 00:43:42,169 - [INFO] - Server starting on port 5004
+2026-05-22 00:44:06,393 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:32,287 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:33,150 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:33,308 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:33,440 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:33,588 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?
+2026-05-22 00:44:33,726 - [ERROR] - Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\app.py", line 557, in home
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\NCKH\env_ai\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\home.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\NCKH\WEB\compressive-strength-prediction-rpwac\templates\base.html", line 123, in top-level template code
+    <a class="nav-link" href="{{ url_for('inverse_design') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NCKH\env_ai\Lib\site-packages\werkzeug\routing\map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'inverse_design'. Did you mean 'predict' instead?

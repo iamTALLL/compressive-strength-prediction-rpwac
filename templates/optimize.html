@@ -114,9 +114,9 @@
                     <div class="form-group">
                         <label for="target_cs">Target CS (MPa)</label>
                         <input type="number" step="0.01" name="target_cs" id="target_cs" class="form-control" required
-                        value="{{ request.form.get('target_cs', 45) }}" min="10" max="90"
+                        value="{{ request.form.get('target_cs', 45) }}" min="10" max="50"
                         placeholder="Example 45.0">
-                        <small class="form-text italic-description">Target value for compressive strength (10 - 90 MPa).</small>
+                        <small class="form-text italic-description">Target value for compressive strength (10 - 50 MPa).</small>
                     </div>
                 </div>
             </div>
@@ -127,9 +127,15 @@
                 <div class="col-md-4 col-sm-6 mb-3">
                     <div class="form-group">
                         <label for="{{ feat }}">{{ name_map[feat] }} ({{ feat }})</label>
+                        {% if feat in derived_features %}
+                        <input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control"
+                        placeholder="Auto calculated" value="" disabled>
+                        <small class="form-text italic-description">Automatically calculated from the mix design.</small>
+                        {% else %}
                         <input type="number" step="0.0001" name="{{ feat }}" id="{{ feat }}" class="form-control"
                         placeholder="0 (Optimize)"
                         value="{{ request.form.get(feat, '') }}">
+                        {% endif %}
                     </div>
                 </div>
                 {% if loop.index is divisibleby 3 %}</div><div class="row">{% endif %}
@@ -160,6 +166,31 @@
         <h2 class="display-4">{{ predicted_cs }} MPa</h2>
     </div>
 </div>
+<div class="row text-center mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <p class="mb-1">Practical Status</p>
+        <h4>{{ practical_status }}</h4>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <p class="mb-1">Water/Cement</p>
+        <h4>{{ water_cement_ratio }}</h4>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <p class="mb-1">Total Volume</p>
+        <h4>{{ total_volume }} m3</h4>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <p class="mb-1">Concrete SG</p>
+        <h4>{{ concrete_sg }}</h4>
+    </div>
+</div>
+{% if practical_warnings %}
+<div class="alert alert-warning mt-3">
+    {% for warning in practical_warnings %}
+    <div>{{ warning }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 <h5 class="mt-4 border-top pt-3">Optimized Component Details (kg/m³)</h5>
 <div class="table-responsive">
 <table class="table table-bordered table-hover results-table">
@@ -183,7 +214,7 @@
 </div>
 <div class="alert alert-info mt-3">
 <i class="fas fa-info-circle"></i>
-The algorithm aims to find a mix with a total volume approximately 1 m³, minimizing cement ({{ L1 }} × c_d) and maximizing recycled plastic ({{ L2 }} × p_q), while achieving a compressive strength as close as possible to the Target CS.
+The algorithm keeps water/cement and concrete specific gravity auto-calculated, targets a total absolute volume close to 1 m3, and rejects mixes that are not practical for trial casting.
 </div>
 </div>
 </div>
