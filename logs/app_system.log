@@ -388,3 +388,9 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'invers
 2026-05-22 01:15:08,836 - [INFO] - Starting server on port 5004
 2026-05-22 01:15:21,221 - [INFO] - Optimization attempt 1
 2026-05-22 01:15:52,932 - [INFO] - Predicted CS = 45.71, score = 9.1924
+2026-05-22 01:35:38,895 - [INFO] - Model loaded successfully.
+2026-05-22 01:35:38,899 - [INFO] - Starting server on port 5004
+2026-05-22 01:35:57,527 - [INFO] - Optimization attempt 1
+2026-05-22 01:36:04,604 - [INFO] - Predicted CS = 47.17, score = 50.6664
+2026-05-22 01:36:04,604 - [INFO] - Optimization attempt 2
+2026-05-22 01:36:20,235 - [INFO] - Predicted CS = 45.13, score = 5.7918
